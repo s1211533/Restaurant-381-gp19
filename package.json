@@ -1,6 +1,6 @@
 {
-	"name": "S381Assignment",
-	"description": "COMPS381F_Assignment",
+	"name": "restaurant-381t",
+	"description": "restaurant-381",
 	"version": "0.0.1",
 	"dependencies": {
 		"mongodb": "3.1",
