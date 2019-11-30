@@ -8,8 +8,8 @@ const mongoDBurl = 'mongodb+srv://aaron:aaronso@aarondb-ep2mi.mongodb.net/test?r
 const dbName = 'AaronDB';
 var session = require('cookie-session');
 var express = require('express');
-
-const app = express();
+app.set('trust poxy', 1);
+app = express();
 
 
 
