@@ -1,51 +1,47 @@
 <html>
-   <head>
-   <title>Login</title>
-   <meta name="viewport" content="width=device-width, initial-scale=1">
-   <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
-   </head>
-   <body>
-         <header class="w3-container w3-teal">
-         <h1>Login/Register</h1>
-         </header>
+    <head>
+        <title>Login Here</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    </head>
+    <body class="container">
+        <div class="page-header">
+            <h1>Simple Auth-System</h1>
+        </div>
 
-         
-         <div class="w3-container w3-half w3-margin-top">
-         <h3>Login</h3>
-         <form action="http://localhost:8099/" method="post" class="w3-container w3-card-2">
-            <p>
-            <input name="logid" class="w3-input" type="text" style="width:90%" required="">
-            <label class="w3-label w3-validate">Name</label></p>
-            <p>
-            <input name="password" class="w3-input" type="password" style="width:90%">
-            <label class="w3-label w3-validate">Password</label></p>
-            <p>
-            <button class="w3-btn w3-section w3-teal w3-ripple"> Log in </button></p>
-            </form>
-            </div>   
-        
-            <div class="w3-container w3-half w3-margin-top">
-                  <h3>Register</h3>
-                  <form action="http://localhost:8099/" method="post" class="w3-container w3-card-2">
-                     <p>
-                     <input name="regid" class="w3-input" type="text" style="width:90%" required="">
-                     <label class="w3-label w3-validate">Name</label></p>
-                     <p>
-                     <input name="repassword" class="w3-input" type="password" style="width:90%">
-                     <label class="w3-label w3-validate">Password</label></p>
-                     <p>
-                     <p>
-                     <input name="confirmpassword" class="w3-input" type="password" style="width:90%">
-                     <label class="w3-label w3-validate">Confirm Password</label></p>
-                     <p>   
-                     <button class="w3-btn w3-section w3-teal w3-ripple">Register</button></p>
-                     </form>
-                     </div>  
-                    
-                     
-                    
-   </body>
-   
-   
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/signup">Sign Up</a></li>
+                        <li><a href="/dashboard">Dashboard</a></li>
+                    </ul>
 
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/login">Log In</a></li>
+                        <li><a href="/logout">Log Out</a></li>
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+
+        <div class="container row">
+            <div class="jumbotron col-sm-4 pull-center">
+                <form action="/login" method="post">
+                    <div>
+                        <label>Username:</label>
+                        <input type="text" name="username"/>
+                    </div>
+                    <div>
+                        <label>Password:</label>
+                        <input type="password" name="password"/>
+                    </div>
+                    <div>
+                        <input class="btn btn-primary" type="submit" value="Log In"/>
+                    </div>
+                </form>                  
+            </div>          
+        </div>
+    </body>
 </html>
