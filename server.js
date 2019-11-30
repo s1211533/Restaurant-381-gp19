@@ -1,4 +1,4 @@
-
+const qs = require ('querystring');
 const http = require('http');
 const url  = require('url');
 const MongoClient = require('mongodb').MongoClient;
@@ -6,6 +6,9 @@ const assert = require('assert');
 const ObjectId = require('mongodb').ObjectID;
 const mongoDBurl = 'mongodb+srv://aaron:aaronso@aarondb-ep2mi.mongodb.net/test?retryWrites=true&w=majority';
 const dbName = 'AaronDB';
+var session = require('cookie-session');
+var express = require('express');
+
 
 const server = http.createServer((req,res) => {
 	let timestamp = new Date().toISOString();
@@ -14,7 +17,13 @@ const server = http.createServer((req,res) => {
 	let parsedURL = url.parse(req.url,true); // true to get query as object 
 	let max = (parsedURL.query.max) ? parsedURL.query.max : 20;
 
+	
+   		 
+
+
 	switch(parsedURL.pathname) {
+		
+
 		case '/read':
 			read_n_print(res,parseInt(max));
 			break;
@@ -45,12 +54,52 @@ const server = http.createServer((req,res) => {
 			updateDoc(res,parsedURL.query);
 			break;
 		default:
-			res.writeHead(404, {"Content-Type": "text/html"});
-			res.write('<html><body>');
-			res.write("404 Not Found\n");
-			res.end('<br><a href=/read?max=5>Give this a try instead?</a>');
+			login(parsedURL.query.criteria);
 	}
 });
+
+
+const login= (db,max,criteria,callback) =>{
+	app.post('/register', function(req,res){ 
+		var name = req.body.regid;
+		var passa = req.body.comfirmpassword; 
+		var passb = req.body.repassword; 
+		if (passa==passb) {  
+			var data = { 
+			"name": name,   
+			"password":passa
+			} 
+
+			db.collection('details').insertOne(data,function(err, collection){ 
+			if (err) throw err; 
+			console.log("New user inserted Successfully");                
+		   }); }
+		else { alert("The confirm password does not match."); return res.redirect('login.html'); }
+	  
+		return res.redirect('login.html'); 
+	 }) 
+
+		 app.post('/login', function(req,res){ 
+
+			var name = req.body.name; 
+			var pass = req.body.password; 
+		if (pass==pass)  {
+		   app.use(session({
+			  name: 'user',
+			  keys: []
+		   }));
+
+			db.collection('s381assignment').insertOne(data,function(err, collection){ 
+			if (err) throw err; 
+			console.log("New user inserted Successfully");                
+		   }); }
+		else { alert("The confirm password does not match."); return res.redirect('login.html'); }
+	  
+		return res.redirect('login.html'); 
+	 })
+
+}
+
 
 const findRestaurants = (db, max, criteria, callback) => {
 	//console.log(`findRestaurants(), criteria = ${JSON.stringify(criteria)}`);
@@ -145,7 +194,7 @@ const insertDoc = (res,doc) => {
 		});
 	} else {
 		res.writeHead(404, {"Content-Type": "text/html"});
-		res.write('<html><body>');
+		res.write('<html>123<body>');
 		res.write(`${doc} : Invalid document!\n`);
 		res.end('<br><a href=/read?max=5>Home</a>');	
 	}
@@ -175,7 +224,7 @@ const deleteDoc = (res,criteria) => {
 		});
 	} else {
 		res.writeHead(404, {"Content-Type": "text/html"});
-		res.write('<html><body>');
+		res.write('<html>5555<body>');
 		res.write("Invalid criteria!\n");
 		res.write(criteria);
 		res.end('<br><a href=/read?max=5>Home</a>');	
@@ -204,11 +253,9 @@ const updateDoc = (res,newDoc) => {
 		});
 	} else {
 		res.writeHead(404, {"Content-Type": "text/html"});
-		res.write('<html><body>');
+		res.write('<html>44444<body>');
 		res.write("Updated failed!\n");
 		res.write(newDoc);
 		res.end('<br><a href=/read?max=5>Home</a>');	
 	}
 }
-
-server.listen(process.env.PORT || 8099);
