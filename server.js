@@ -1,132 +1,265 @@
+const qs = require ('querystring');
+const http = require('http');
+const url  = require('url');
+const MongoClient = require('mongodb').MongoClient;
+const assert = require('assert');
+const ObjectId = require('mongodb').ObjectID;
+const mongoDBurl = 'mongodb+srv://aaron:aaronso@aarondb-ep2mi.mongodb.net/test?retryWrites=true&w=majority';
+const dbName = 'AaronDB';
+var session = require('cookie-session');
 var express = require('express');
-var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
-var session = require('express-session');
-var morgan = require('morgan');
-var User = require('./user');
-
-// invoke an instance of express application.
-var app = express();
-
-// set our application port
-app.set('port', 9000);
-
-// set morgan to log info about our requests for development use.
-app.use(morgan('dev'));
-
-// initialize body-parser to parse incoming parameters requests to req.body
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// initialize cookie-parser to allow us access the cookies stored in the browser. 
-app.use(cookieParser());
-
-// initialize express-session to allow us track the logged-in user across sessions.
-app.use(session({
-    key: 'user_sid',
-    secret: 'somerandonstuffs',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        expires: 600000
-    }
-}));
+app.set('trust poxy', 1);
+app = express();
 
 
-// This middleware will check if user's cookie is still saved in browser and user is not set, then automatically log the user out.
-// This usually happens when you stop your express server after login, your cookie still remains saved in the browser.
-app.use((req, res, next) => {
-    if (req.cookies.user_sid && !req.session.user) {
-        res.clearCookie('user_sid');        
-    }
-    next();
+
+
+const server = http.createServer((req,res) => {
+	let timestamp = new Date().toISOString();
+	console.log(`Incoming request ${req.method}, ${req.url} received at ${timestamp}`);
+
+	let parsedURL = url.parse(req.url,true); // true to get query as object 
+	let max = (parsedURL.query.max) ? parsedURL.query.max : 20;
+
+	
+   		 
+
+
+	switch(parsedURL.pathname) {
+		
+
+		case '/read':
+			read_n_print(res,parseInt(max));
+			break;
+		case '/showdetails':
+			showdetails(res,parsedURL.query._id);
+			break;
+		case '/search':
+			read_n_print(res,parseInt(max),parsedURL.query.criteria);
+			break;
+		case '/create':
+			insertDoc(res,parsedURL.query.criteria);
+			break;
+		case '/delete':
+			deleteDoc(res,parsedURL.query.criteria);
+			break;
+		case '/edit':
+			res.writeHead(200,{"Content-Type": "text/html"});
+			res.write('<html><body>');
+			res.write('<form action="/update">');
+			res.write(`<input type="text" name="name" value="${parsedURL.query.name}"><br>`);
+			res.write(`<input type="text" name="borough" value="${parsedURL.query.borough}"><br>`);
+			res.write(`<input type="text" name="cuisine" value="${parsedURL.query.cuisine}"><br>`);
+			res.write(`<input type="hidden" name="_id" value="${parsedURL.query._id}"><br>`);
+			res.write('<input type="submit" value="Update">')
+			res.end('</form></body></html>');
+			break;
+		case '/update':
+			updateDoc(res,parsedURL.query);
+			break;
+		default:
+			login(parsedURL.query.criteria);
+	}
 });
 
 
-// middleware function to check for logged-in users
-var sessionChecker = (req, res, next) => {
-    if (req.session.user && req.cookies.user_sid) {
-        res.redirect('/dashboard');
-    } else {
-        next();
-    }    
-};
+const login= (db,max,criteria,callback) =>{
+	app.post('/register', function(req,res){ 
+		var name = req.body.regid;
+		var passa = req.body.comfirmpassword; 
+		var passb = req.body.repassword; 
+		if (passa==passb) {  
+			var data = { 
+			"name": name,   
+			"password":passa
+			} 
+
+			db.collection('details').insertOne(data,function(err, collection){ 
+			if (err) throw err; 
+			console.log("New user inserted Successfully");                
+		   }); }
+		else { alert("The confirm password does not match."); return res.redirect('login.html'); }
+	  
+		return res.redirect('login.html'); 
+	 }) 
+
+		 app.post('/login', function(req,res){ 
+
+			var name = req.body.name; 
+			var pass = req.body.password; 
+		if (pass==pass)  {
+		   app.use(session({
+			  name: 'user',
+			  keys: []
+		   }));
+
+			db.collection('s381assignment').insertOne(data,function(err, collection){ 
+			if (err) throw err; 
+			console.log("New user inserted Successfully");                
+		   }); }
+		else { alert("The confirm password does not match."); return res.redirect('login.html'); }
+	  
+		return res.redirect('login.html'); 
+	 })
+
+}
 
 
-// route for Home-Page
-app.get('/', sessionChecker, (req, res) => {
-    res.redirect('/login');
-});
+const findRestaurants = (db, max, criteria, callback) => {
+	//console.log(`findRestaurants(), criteria = ${JSON.stringify(criteria)}`);
+	let criteriaObj = {};
+	try {
+		criteriaObj = JSON.parse(criteria);
+	} catch (err) {
+		console.log('Invalid criteria!  Default to {}');
+	}
+	cursor = db.collection('restaurant').find(criteriaObj).sort({name: -1}).limit(max); 
+	cursor.toArray((err,docs) => {
+		assert.equal(err,null);
+		//console.log(docs);
+		callback(docs);
+	});
+}
 
+const read_n_print = (res,max,criteria={}) => {
+	const client = new MongoClient(mongoDBurl);
+	client.connect((err) => {
+		assert.equal(null,err);
+		console.log("Connected successfully to server");
+		
+		const db = client.db(dbName);
+		findRestaurants(db, max, criteria, (restaurants) => {
+			client.close();
+			console.log('Disconnected MongoDB');
+			res.writeHead(200, {"Content-Type": "text/html"});
+			res.write('<html><head><title>Restaurant</title></head>');
+			res.write('<body><H1>Restaurants</H1>');
+			res.write('<H2>Showing '+restaurants.length+' document(s)</H2>');
+			res.write('<ol>');
+			for (r of restaurants) {
+				//console.log(r._id);
+				res.write(`<li><a href='/showdetails?_id=${r._id}'>${r.name}</a></li>`)
+			}
+			res.write('</ol>');
+			res.end('</body></html>');
+		});
+	});
+}
 
-// route for user signup
-app.route('/signup')
-    .get(sessionChecker, (req, res) => {
-        res.sendFile(__dirname + '/signup.html');
-    })
-    .post((req, res) => {
-        User.create({
-            username: req.body.username,
-            email: req.body.email,
-            password: req.body.password
-        })
-        .then(user => {
-            req.session.user = user.dataValues;
-            res.redirect('/dashboard');
-        })
-        .catch(error => {
-            res.redirect('/signup');
-        });
-    });
+const showdetails = (res,_id) => {
+	const client = new MongoClient(mongoDBurl);
+	client.connect((err) => {
+		assert.equal(null,err);
+		console.log("Connected successfully to server");
+		
+		const db = client.db(dbName);
 
+		cursor = db.collection('restaurant').find({_id: ObjectId(_id)});
+		cursor.toArray((err,docs) => {
+			assert.equal(err,null);
+			client.close();
+			console.log('Disconnected MongoDB');
+			res.writeHead(200, {"Content-Type": "text/html"});
+			res.write(`<html><head><title>${docs[0].name}</title></head>`);
+			res.write('<h3>')
+			res.write(`<p>Name: ${docs[0].name}</p>`);
+			res.write(`<p>Location: ${docs[0].borough}</p>`);
+			res.write(`<p>Cuisine: ${docs[0].cuisine}</p>`);
+			res.write('</h3>')
+			res.write(`<br><a href="/edit?_id=${_id}&name=${docs[0].name}&borough=${docs[0].borough}&cuisine=${docs[0].cuisine}">Edit</a>`)
+			res.write('<br>')
+			res.write('<br><a href="/read?max=20">Home</a>')
+			res.end('</body></html>');
+		});
+	});
+}
 
-// route for user Login
-app.route('/login')
-    .get(sessionChecker, (req, res) => {
-        res.sendFile(__dirname + '/login.html');
-    })
-    .post((req, res) => {
-        var username = req.body.username,
-            password = req.body.password;
+const insertDoc = (res,doc) => {
+	let docObj = {};
+	try {
+		docObj = JSON.parse(doc);
+		//console.log(Object.keys(docObj).length);
+	} catch (err) {
+		console.log(`${doc} : Invalid document!`);
+	}
+	if (Object.keys(docObj).length > 0) {  // document has at least 1 name/value pair
+		const client = new MongoClient(mongoDBurl);
+		client.connect((err) => {
+			assert.equal(null,err);
+			console.log("Connected successfully to server");
+			const db = client.db(dbName);
+			db.collection('restaurant').insertOne(docObj,(err,result) => {
+				assert.equal(err,null);
+				res.writeHead(200, {"Content-Type": "text/html"});
+				res.write('<html><body>');
+				res.write(`Inserted ${result.insertedCount} document(s) \n`);
+				res.end('<br><a href=/read?max=5>Home</a>');					
+			});
+		});
+	} else {
+		res.writeHead(404, {"Content-Type": "text/html"});
+		res.write('<html>123<body>');
+		res.write(`${doc} : Invalid document!\n`);
+		res.end('<br><a href=/read?max=5>Home</a>');	
+	}
+}
 
-        User.findOne({ where: { username: username } }).then(function (user) {
-            if (!user) {
-                res.redirect('/login');
-            } else if (!user.validPassword(password)) {
-                res.redirect('/login');
-            } else {
-                req.session.user = user.dataValues;
-                res.redirect('/dashboard');
-            }
-        });
-    });
+const deleteDoc = (res,criteria) => {
+	let criteriaObj = {};
+	try {
+		criteriaObj = JSON.parse(criteria);
+	} catch (err) {
+		console.log(`${criteria} : Invalid criteria!`);
+	}
+	if (Object.keys(criteriaObj).length > 0) {
+		const client = new MongoClient(mongoDBurl);
+		client.connect((err) => {
+			assert.equal(null,err);
+			console.log("Connected successfully to server");
+			const db = client.db(dbName);
+			db.collection('restaurant').deleteOne(criteriaObj,(err,result) => {
+				console.log(result);
+				assert.equal(err,null);
+				res.writeHead(200, {"Content-Type": "text/html"});
+				res.write('<html><body>');
+				res.write(`Deleted ${result.deletedCount} document(s)\n`);
+				res.end('<br><a href=/read?max=5>Home</a>');					
+			});
+		});
+	} else {
+		res.writeHead(404, {"Content-Type": "text/html"});
+		res.write('<html>5555<body>');
+		res.write("Invalid criteria!\n");
+		res.write(criteria);
+		res.end('<br><a href=/read?max=5>Home</a>');	
+	}
+}
 
-
-// route for user's dashboard
-app.get('/dashboard', (req, res) => {
-    if (req.session.user && req.cookies.user_sid) {
-        res.sendFile(__dirname + '/dashboard.html');
-    } else {
-        res.redirect('/login');
-    }
-});
-
-
-// route for user logout
-app.get('/logout', (req, res) => {
-    if (req.session.user && req.cookies.user_sid) {
-        res.clearCookie('user_sid');
-        res.redirect('/');
-    } else {
-        res.redirect('/login');
-    }
-});
-
-
-// route for handling 404 requests(unavailable routes)
-app.use(function (req, res, next) {
-  res.status(404).send("Sorry can't find that!")
-});
-
-
-// start the express server
-app.listen(app.get('port'), () => console.log(`App started on port ${app.get('port')}`));
+const updateDoc = (res,newDoc) => {
+	console.log(`updateDoc() - ${JSON.stringify(newDoc)}`);
+	if (Object.keys(newDoc).length > 0) {
+		const client = new MongoClient(mongoDBurl);
+		client.connect((err) => {
+			assert.equal(null,err);
+			console.log("Connected successfully to server");
+			const db = client.db(dbName);
+			let criteria = {};
+			criteria['_id'] = ObjectId(newDoc._id);
+			delete newDoc._id;
+			db.collection('restaurant').replaceOne(criteria,newDoc,(err,result) => {
+				assert.equal(err,null);
+				console.log(JSON.stringify(result));
+				res.writeHead(200, {"Content-Type": "text/html"});
+				res.write('<html><body>');
+				res.write(`Updated ${result.modifiedCount} document(s).\n`);
+				res.end('<br><a href=/read?max=5>Home</a>');				
+			});
+		});
+	} else {
+		res.writeHead(404, {"Content-Type": "text/html"});
+		res.write('<html>44444<body>');
+		res.write("Updated failed!\n");
+		res.write(newDoc);
+		res.end('<br><a href=/read?max=5>Home</a>');	
+	}
+}
