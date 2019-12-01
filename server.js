@@ -1,6 +1,7 @@
 const http = require('http');
 const url  = require('url');
 const MongoClient = require('mongodb').MongoClient;
+const formidable = require('formidable');
 const assert = require('assert');
 const ObjectId = require('mongodb').ObjectID;
 const mongoDBurl = 'mongodb+srv://aaron:aaronso@aarondb-ep2mi.mongodb.net/test?retryWrites=true&w=majority';
@@ -33,7 +34,7 @@ const server = http.createServer((req,res) => {
 		case '/insert':
 			res.writeHead(200,{"Content-Type": "text/html"});
 			res.write('<html><body>');
-			res.write('<form action="/create">');
+			res.write('<form action="/create" method="post">');
 			res.write(`<input type="text" name="name"><br>`);
 			res.write(`<input type="text" name="borough"><br>`);
 			res.write(`<input type="text" name="cuisine"><br>`);
@@ -98,7 +99,7 @@ const read_n_print = (res,max,criteria={}) => {
 				res.write(`<li><a href='/showdetails?_id=${r._id}'>${r.name}</a></li>`)
 			}
 			res.write('</ol>');
-			res.write('<br><a href="/insert">Insert</a>')
+			res.write('<br><a href="/insert?_id=${_id}">Insert</a>')
 			res.end('</body></html>');
 		});
 	});
@@ -132,28 +133,37 @@ const showdetails = (res,_id) => {
 	});
 }
 
-const insertDoc = (res,doc) => {
-	try {
-		NewObj = JSON.parse(doc);
-	} catch (err) {
-
-		console.log(`${doc}`);
-	}
-	if (Object.keys(Doc).length > 0) {
+const insertDoc = (res,Doc,callback) => {
+	const form = new formidable.IncomingForm();
+  	form.parse(req, (err, fields, Doc) => {
+	let docObj = {};
+		if (fields.name && fields.name.length > 0) {
+        		name = fields.name;
+			docObj['name'] = name;
+		}
+		if (fields.borough && fields.borough.length > 0) {
+        		borough = fields.borough;
+			docObj['borough'] = borough;
+		}
+		if (fields.cuisine && fields.cuisine.length > 0) {
+        		cuisine = fields.cuisine;
+			docObj['cuisine'] = cuisine;
+		}
+	if (Object.keys(docObj).length > 0) 
 		const client = new MongoClient(mongoDBurl);
 		client.connect((err) => {
 			assert.equal(null,err);
 			console.log("Connected successfully to server");
 			const db = client.db(dbName);
-			db.collection('restaurant').insertOne(Doc,(err,result) => {
+			db.collection('restaurant').insertOne(docObj,(err,result) => {
 				assert.equal(err,null);
 				res.writeHead(200, {"Content-Type": "text/html"});
 				res.write('<html><body>');
-				res.write(`Updated ${result.insertedCount} document(s).\n`);
-				res.end('<br><a href=/read?max=20>Home</a>');				
+				res.write(`Inserted ${result.insertedCount} document(s) \n`);
+				res.end('<br><a href=/read?max=5>Home</a>');					
 			});
 		});
-	} else {
+  	} else {
 		res.writeHead(404, {"Content-Type": "text/html"});
 		res.write('<html><body>');
 		res.write(`${doc} : Invalid document!\n`);
