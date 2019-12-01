@@ -136,7 +136,6 @@ const showdetails = (res,_id) => {
 	});
 }
 const insertDoc = (res,doc) => {
-	doc = {name:req.query.name, borough:req.query.borough, cuisine:req.query.cuisine}
 	let docObj = {};
 	try {
 		docObj = JSON.parse(doc);
@@ -163,6 +162,7 @@ const insertDoc = (res,doc) => {
 		res.writeHead(404, {"Content-Type": "text/html"});
 		res.write('<html><body>');
 		res.write(`${docObj} : Invalid document!\n`);
+		res.write(`<head><title>{doc}</title></head>`);
 		res.end('<br><a href=/read?max=5>Home</a>');	
 	}
 }
