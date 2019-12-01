@@ -37,6 +37,7 @@ const server = http.createServer((req,res) => {
 			res.write(`<input type="text" name="name"><br>`);
 			res.write(`<input type="text" name="borough"><br>`);
 			res.write(`<input type="text" name="cuisine"><br>`);
+			res.write(`<input type="hidden" name="_id"><br>`);
 			res.write('<input type="submit" value="Create">')
 			res.end('</form></body></html>');
 			Doc
