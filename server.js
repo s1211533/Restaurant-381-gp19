@@ -26,44 +26,37 @@ const server = http.createServer((req,res) => {
 			read_n_print(res,parseInt(max),parsedURL.query.criteria);
 			break;
 		case '/create':
-			var name, borough, description;
-    			form.parse(req, (err, fields, files) => {
-			postData = fields;
-			if (postData.name && postData.name.length > 0) {
-        			name = postData.name;
-     			}
-			if (postData.borough && postData.borough.length > 1) {
-        			borough = postData.borough;
-			}
-			if (postData.description && postData.description.length > 1) {
-        			description = postData.description;
-			}
-			fs.readFile(files.filetoupload.path, (err,data) => {
-        			const client = new MongoClient(mongoDBurl);
-				client.connect((err) => {
-         				try {	
-              					assert.equal(err,null);
-            				} catch (err) {
-              					res.writeHead(500,{"Content-Type":"text/plain"});
-             					res.end("MongoClient connect() failed!");
-              					return(-1);
-		  			}
-					const db = client.db(dbName);
-         				let new_r = {};
-					new_r['name'] = name;
-					new_r['borough'] = borough;
-					new_r['description'] = description;
-					const insertPhoto = (db,r,callback) => {
-  						db.collection('restaurant').insertOne(r,(err,result) => {
-    							assert.equal(err,null);
-    							console.log("insert was successful!");
-    							console.log(JSON.stringify(result));
-    							callback(result);
-  						});
-					}
+			if (req.method == 'POST') {
+				let data = '';  // message body data
+				req.on('data', (payload) => {
+					data += payload;
 				});
-			});
-			});		    
+				req.on('end', () => {  
+					let postdata = qs.parse(data);
+					const client = new MongoClient(mongoDBurl);
+					client.connect((err) => {
+						assert.equal(null,err);
+						console.log("Connected successfully to server");
+						const db = client.db(dbName);
+						try{
+							temp = '{"name" :  "'+ postdata.name + '", "borough" : "' + postdata.borough + '", "cuisine" : "' + postdata.cuisine + '"}';
+							obj ={};
+							obj = JSON.parse(temp);
+						} catch (err) {
+							console.log('Invalida!');
+						}
+						db.collection('restaurant').insertOne(obj,(err,result) => {
+							res.writeHead(200, {'Content-Type': 'text/html'}); 
+         						res.write('<html>')        
+         						res.write(`Successful!`)
+        						res.end('</html>') 					
+						});
+					});					
+				})	
+				} else {
+					res.writeHead(404, {'Content-Type': 'text/plain'}); 
+					res.end('I can only handle POST request!!! Sorry.')
+				}
 			break;
 		case '/delete':
 			deleteDoc(res,parsedURL.query.criteria);
