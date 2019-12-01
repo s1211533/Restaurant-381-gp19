@@ -136,7 +136,7 @@ const insertDoc = (res,doc) => {
 		docObj = JSON.parse(doc);
 		//console.log(Object.keys(docObj).length);
 	} catch (err) {
-		console.log(`${doc} : Invalid document!`);
+		console.log(`${docObj} : Invalid document!`);
 	}
 	if (Object.keys(docObj).length > 0) {  // document has at least 1 name/value pair
 		const client = new MongoClient(mongoDBurl);
