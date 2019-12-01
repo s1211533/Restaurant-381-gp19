@@ -136,7 +136,7 @@ const insertDoc = (res,doc) => {
 	let docObj = {};
 	try {
 		docObj = JSON.parse(doc);
-		console.log(Object.keys(docObj).length);
+		//console.log(Object.keys(docObj).length);
 	} catch (err) {
 		console.log(`${doc} : Invalid document!`);
 	}
@@ -151,14 +151,14 @@ const insertDoc = (res,doc) => {
 				res.writeHead(200, {"Content-Type": "text/html"});
 				res.write('<html><body>');
 				res.write(`Inserted ${result.insertedCount} document(s) \n`);
-				res.end('<br><a href=/read?max=20>Home</a>');					
+				res.end('<br><a href=/read?max=5>Home</a>');					
 			});
 		});
 	} else {
 		res.writeHead(404, {"Content-Type": "text/html"});
 		res.write('<html><body>');
 		res.write(`${doc} : Invalid document!\n`);
-		res.end('<br><a href=/read?max=20>Home</a>');	
+		res.end('<br><a href=/read?max=5>Home</a>');	
 	}
 }
 const deleteDoc = (res,criteria) => {
