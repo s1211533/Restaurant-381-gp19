@@ -1,15 +1,11 @@
-const MongoClient = require('mongodb').MongoClient;
-const assert = require('assert');
-const ObjectId = require('mongodb').ObjectID;
+var mongodb = require('mongodb');
+var MongoClient = mongodb.MongoClient;
 const url = 'mongodb+srv://austinmok915:a8080881_B@restaurant-381-as8sr.gcp.mongodb.net/test?retryWrites=true&w=majority';
-const dbName = 'restaurant';
-
-const client = new MongoClient(url);
-
-client.connect((err) => {
-   assert.equal(null,err);
-   console.log("Connected successfully to server");
-
+MongoClient.connect(url, function (err, db) {
+  if (err) {
+    console.log('Unable to connect to the mongoDB server. Error:', err);
+  } else {
+    console.log('Connection established to', url);
    const db = client.db(dbName);
    /*
 
