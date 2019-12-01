@@ -6,6 +6,7 @@ const ObjectId = require('mongodb').ObjectID;
 const mongoDBurl = 'mongodb+srv://aaron:aaronso@aarondb-ep2mi.mongodb.net/test?retryWrites=true&w=majority';
 const dbName = 'test';
 const formidable = require('formidable');
+const fs = require('fs');
 
 const server = http.createServer((req,res) => {
 	let timestamp = new Date().toISOString();
@@ -25,7 +26,40 @@ const server = http.createServer((req,res) => {
 			read_n_print(res,parseInt(max),parsedURL.query.criteria);
 			break;
 		case '/create':
-			insertDoc(res,parsedURL.query);
+			const form = new formidable.IncomingForm();
+    			form.parse(req, (err, fields, files) => {
+			if (fields.name && fields.name.length > 0) {
+        			name = fields.name;
+     			}
+			 if (fields.borough && fields.borough.length > 1) {
+        			borough = fields.borough;
+			 }
+			if (fields.description && fields.description.length > 1) {
+        			description = fields.description;
+			}
+			fs.readFile(files.filetoupload.path, (err,data) => {
+        			const client = new MongoClient(mongoDBurl);
+				client.connect((err) => {
+         				try {	
+              					assert.equal(err,null);
+            				} catch (err) {
+              					res.writeHead(500,{"Content-Type":"text/plain"});
+             					res.end("MongoClient connect() failed!");
+              					return(-1);
+		  			}
+					const db = client.db(dbName);
+         				let new_r = {};
+					new_r['name'] = name;
+					new_r['borough'] = borough;
+					new_r['description'] = description;
+					const insertPhoto = (db,r,callback) => {
+  						db.collection('restaurant').insertOne(r,(err,result) => {
+    							assert.equal(err,null);
+    							console.log("insert was successful!");
+    							console.log(JSON.stringify(result));
+    							callback(result);
+  						});
+					}
 			break;
 		case '/delete':
 			deleteDoc(res,parsedURL.query.criteria);
@@ -162,7 +196,6 @@ const insertDoc = (res,doc) => {
 		res.writeHead(404, {"Content-Type": "text/html"});
 		res.write('<html><body>');
 		res.write(`${docObj} : Invalid document!\n`);
-		res.write(`<head><title>{doc}</title></head>`);
 		res.end('<br><a href=/read?max=5>Home</a>');	
 	}
 }
