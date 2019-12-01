@@ -131,6 +131,7 @@ const showdetails = (res,_id) => {
 	});
 }
 const insertDoc = (res,doc) => {
+	doc.name = parsedURL.query.name
 	let docObj = {};
 	try {
 		docObj = JSON.parse(doc);
