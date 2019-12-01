@@ -8,16 +8,7 @@ const dbName = 'AaronDB';
 var session = require('cookie-session');
 var express = require('express');
 const app = express();
-
-
-app.use(session({
-	name: 'session'
-}));
-
-app.use(bodyParser.json());
-
-
-app.use(bodyParser.urlencoded({ extended: true }));
+const bodyParser = require('body-parser');
 
 const server = http.createServer((req,res) => {
 	let timestamp = new Date().toISOString();
@@ -26,18 +17,14 @@ const server = http.createServer((req,res) => {
 	let max = (parsedURL.query.max) ? parsedURL.query.max : 20;   		 
 	switch(parsedURL.pathname) {
 		case '/':
-			app.get('/', (req,res) => {
-				console.log(req.session);
-				if (!req.session.authenticated) {
-					res.redirect('/login');
-				}
-			});
-			app.get('/login', (req,res) => {
-				res.status(200).sendFile(__dirname + '/login.html');
-			
-			});	
+			console.log(req.session);
+			if (!req.session.authenticated) {
+				res.redirect('/login');
+			}
+			break;
+		case '/login':
+			res.status(200).sendFile(__dirname + '/login.html');	
 			break;	
-		
 		default:
 			res.writeHead(404, {"Content-Type": "text/html"});
 			res.write('<html><body>');
