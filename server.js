@@ -34,10 +34,10 @@ const server = http.createServer((req,res) => {
 			res.writeHead(200,{"Content-Type": "text/html"});
 			res.write('<html><body>');
 			res.write('<form action="/create">');
-			res.write(`<input type="text" name="name" value="${parsedURL.query.name}"><br>`);
-			res.write(`<input type="text" name="borough" value="${parsedURL.query.borough}"><br>`);
-			res.write(`<input type="text" name="cuisine" value="${parsedURL.query.cuisine}"><br>`);
-			res.write(`<input type="hidden" name="_id" value="${parsedURL.query._id}"><br>`);
+			res.write(`<input type="text" name="name"><br>`);
+			res.write(`<input type="text" name="borough"><br>`);
+			res.write(`<input type="text" name="cuisine"><br>`);
+			res.write(`<input type="hidden" name="_id"><br>`);
 			res.write('<input type="submit" value="Create">')
 			res.end('</form></body></html>');
 			break;
