@@ -25,7 +25,40 @@ const server = http.createServer((req,res) => {
 		case '/search':
 			read_n_print(res,parseInt(max),parsedURL.query.criteria);
 			break;
-			case '/login':
+		case '/create':
+			if (req.method == 'POST') {
+				let data = '';  // message body data
+				req.on('data', (payload) => {
+					data += payload;
+				});
+				req.on('end', () => {  
+					let postdata = qs.parse(data);
+					const client = new MongoClient(mongoDBurl);
+					client.connect((err) => {
+						assert.equal(null,err);
+						console.log("Connected successfully to server");
+						const db = client.db(dbName);
+						try{
+							temp = '{"name" :  "'+ postdata.name + '", "borough" : "' + postdata.borough + '", "cuisine" : "' + postdata.cuisine + '"}';
+							obj ={};
+							obj = JSON.parse(temp);
+						} catch (err) {
+							console.log('Invalida!');
+						}
+						db.collection('restaurants').insertOne(obj,(err,result) => {
+							res.writeHead(200, {'Content-Type': 'text/html'}); 
+         						res.write('<html>')        
+         						res.write('Successful!')
+        						res.end('</html>') 					
+						});
+					});					
+				})	
+				} else {
+					res.writeHead(404, {'Content-Type': 'text/plain'}); 
+					res.end('I can only handle POST request!!! Sorry.')
+				}
+			break;
+		case '/login':
 				if (req.method == 'POST') {
 					let data = '';  // message body data
 			  
