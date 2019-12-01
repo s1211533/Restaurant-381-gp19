@@ -1,5 +1,5 @@
 {
-	"name": "restaurant-381",
+	"name": "server",
 	"description": "restaurant-381",
 	"version": "0.0.1",
 	"dependencies": {
@@ -8,7 +8,7 @@
 		"cookie-session": "latest"
 	},
 	"scripts": {
-		"start": "node server.js"
+		"start": "node server"
 	},
 	"engines": {
 		"node": ">= 6.0.0"
