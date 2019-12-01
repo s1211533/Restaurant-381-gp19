@@ -68,7 +68,7 @@ const server = http.createServer((req,res) => {
 					mimetype = files.filetoupload.type;
 				}
 				fs.readFile(files.filetoupload.path, (err,data) => {
-        				let client = new MongoClient(mongourl);
+        				let client = new MongoClient(mongoDBurl);
         				client.connect((err) => {
          					try {
               						assert.equal(err,null);
