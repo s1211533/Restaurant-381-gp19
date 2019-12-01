@@ -7,8 +7,7 @@ const mongoDBurl = 'mongodb+srv://aaron:aaronso@aarondb-ep2mi.mongodb.net/test?r
 const dbName = 'AaronDB';
 var session = require('cookie-session');
 var express = require('express');
-const bodyParser = require('body-parser');
-app = express();
+const app = express();
 
 const server = http.createServer((req,res) => {
 	let timestamp = new Date().toISOString();
@@ -17,6 +16,8 @@ const server = http.createServer((req,res) => {
 	let parsedURL = url.parse(req.url,true); // true to get query as object 
 	let max = (parsedURL.query.max) ? parsedURL.query.max : 20;   		 
 
+	switch(parsedURL.pathname) {
+		case '/':
 			res.writeHead(200,{"Content-Type": "text/html"});
 			res.write('<html><head>');
 			res.write('<title>Login</title>');
@@ -57,4 +58,14 @@ const server = http.createServer((req,res) => {
             res.write('</div> ');        
 			res.end('</body></html>	');
 			break;
-}
+		
+		default:
+			res.writeHead(404, {"Content-Type": "text/html"});
+			res.write('<html><body>');
+			res.write("404 Not Found\n");
+			res.end('<br><a href=/read?max=5>Give this a try instead?</a>');
+
+	}
+});
+
+server.listen(process.env.PORT || 8099);
