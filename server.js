@@ -7,7 +7,7 @@ const mongoDBurl = 'mongodb+srv://aaron:aaronso@aarondb-ep2mi.mongodb.net/test?r
 const dbName = 'AaronDB';
 var session = require('cookie-session');
 var express = require('express');
-
+const bodyParser = require('body-parser');
 app = express();
 
 const server = http.createServer((req,res) => {
@@ -18,7 +18,7 @@ const server = http.createServer((req,res) => {
 	let max = (parsedURL.query.max) ? parsedURL.query.max : 20;   		 
 
 	switch(parsedURL.pathname) {
-		case '/':
+		case '/login':
 			res.writeHead(200,{"Content-Type": "text/html"});
 			res.write('<html><head>');
 			res.write('<title>Login</title>');
@@ -62,11 +62,6 @@ const server = http.createServer((req,res) => {
 		case '/register':
 			login(res,parsedURL.query.criteria);
 			break;
-
-		case '/login':
-
-
-
 		case '/read':
 			read_n_print(res,parseInt(max));
 			break;
@@ -108,7 +103,6 @@ const server = http.createServer((req,res) => {
 
 
 const regsiter= (res,doc) => {
-
 
 		let docObj = {};
 		try {
