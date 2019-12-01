@@ -55,13 +55,13 @@ const server = http.createServer((req,res) => {
 				if (fields.zipcode && fields.zipcode.length > 0) {
         				zipcode = fields.zipcode;
       				}      				
-				if (fields.latitude && fields.title.latitude > 0) {
+				if (fields.latitude && fields.latitude.length > 0) {
         				latitude = fields.latitude;
       				}
-				if (fields.longitude && fields.title.longitude > 0) {
+				if (fields.longitude && fields.longitude.length > 0) {
         				longitude = fields.longitude;
       				}
-				if (fields.score && fields.title.score > 0) {
+				if (fields.score && fields.score.length > 0) {
         				score = fields.score;
       				}
 				if (files.filetoupload.type) {
@@ -84,8 +84,8 @@ const server = http.createServer((req,res) => {
 						new_r['cuisine'] = cuisine;
 						new_r['address'] = {"street" : "'+ street + '", "building" : "' + building + '", 
 								    "zipcode" : "' + zipcode + '", "latitude" : "' + latitude + '", 
-								    "longitude" : "' + longitude + '"};
-						new_r['grades'] = {"user" : "'+ '1' + '", "score" : "' + score + '"};
+								    "longitude" : "' + longitude '"};
+						new_r['grades'] = {"user" : "'+ score + '", "score" : "' + score '"};
 						new_r['owner'] = 'o'
 						new_r['mimetype'] = mimetype;
          			 		new_r['image'] = new Buffer.from(data).toString('base64');
