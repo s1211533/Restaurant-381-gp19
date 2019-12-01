@@ -134,12 +134,9 @@ const showdetails = (res,_id) => {
 }
 const insertDoc = (res,doc) => {
 	let docObj = {};
-	doc['name'] = parsedURL.query.name;
-	doc['borough'] = parsedURL.query.borough;
-	doc['cuisine'] = parsedURL.query.cuisine;
 	try {
 		docObj = JSON.parse(doc);
-		//console.log(Object.keys(docObj).length);
+		console.log(Object.keys(docObj).length);
 	} catch (err) {
 		console.log(`${doc} : Invalid document!`);
 	}
