@@ -17,12 +17,8 @@ const server = http.createServer((req,res) => {
 	let max = (parsedURL.query.max) ? parsedURL.query.max : 20;   		 
 	switch(parsedURL.pathname) {
 		case '/':
-			console.log(req.session);
-			if (!req.session.authenticated) {
-				res.redirect('/login.html');
-			}
-			break;
-
+			res.redirect('https://restaurant-381.herokuapp.com/login.html');
+		break;
 		default:
 			res.writeHead(404, {"Content-Type": "text/html"});
 			res.write('<html><body>');
