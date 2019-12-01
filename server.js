@@ -58,6 +58,48 @@ const server = http.createServer((req,res) => {
 					res.end('I can only handle POST request!!! Sorry.')
 				}
 			break;
+			case '/login':
+				if (req.method == 'POST') {
+					let data = '';  // message body data
+			  
+					// process data in message body
+					req.on('data', (payload) => {
+					   data += payload;
+					});
+			
+					req.on('end', () => {  
+						let postdata = qs.parse(data);
+						
+							const client = new MongoClient(mongoDBurl);
+						client.connect((err) => {
+							assert.equal(null,err);
+							console.log("Connected successfully to server");
+							const db = client.db(dbName);
+							try{
+							temp = '{ "name" :  "'+ postdata.logid + '", "password" : "' + postdata.password + '"}';
+							obj ={};
+							obj = JSON.parse(temp);
+							} catch (err) {
+								console.log('Invalid a!');
+								}
+							db.collection('user').insertOne(obj,(err,result) => {
+								res.writeHead(200, {'Content-Type': 'text/html'}); 
+         						res.write('<html>')        
+         						res.write(`User Name = ${postdata.logid}`);
+				        
+         						res.write('<br>')
+        						res.write(`Password = ${postdata.password}`);
+        						res.end('</html>') 					
+								});
+						});								
+					 })	
+				} else {
+					res.writeHead(404, {'Content-Type': 'text/plain'}); 
+					res.end('I can only handle POST request!!! Sorry.')
+				}
+			
+			break;
+		
 		case '/delete':
 			deleteDoc(res,parsedURL.query.criteria);
 			break;
@@ -84,12 +126,41 @@ const server = http.createServer((req,res) => {
 			break;
 
 		default:
-			res.write('<html><body>');
-			res.write('<form action="/login" method="post">');
-			res.end('<br><a href=/read?max=20>Give this a try instead?</a>');
-			res.end('</form></body></html>');	
+			res.writeHead(200,{"Content-Type": "text/html"});
+			res.write('<html><head>');
+			res.write('<title>Login</title>');
+			res.write('</head><body>');
+        		res.write(' <header class="w3-container w3-teal">');
+			res.write('<h1>Login/Register</h1>');
+			res.write('</header>    ');  
+        		res.write(' <h3>Login</h3>');
+        		res.write(' <form action="/login" method="post" class="w3-container w3-card-2">');
+			res.write('	 <p>');
+			res.write(`	 Name:<br></br><input name="logid" class="w3-input" type="text" style="width:20%" required="">`);
+			res.write('	  <p>');
+			res.write(`	  Password:<br></br><input name="password" class="w3-input" type="password" style="width:20%">`)
+			res.write('	 <p>');
+			res.write(`	  <button class="w3-btn w3-section w3-teal w3-ripple"> Log in </button></p>`);
+			res.write('	 </form><br></br><br></br>  ');        
+            		res.write('      <h3>Register</h3>');
+           		res.write('      <form action="/register" method="post" class="w3-container w3-card-2">');
+            		res.write('         <p>');
+            		res.write(`         Name:<br></br><input name="regid" class="w3-input" type="text" style="width:20%" required="">`);
+            		res.write('         <p>');
+            		res.write(`         Password:<br></br><input name="regpassword" class="w3-input" type="password" style="width:20%">`);
+            		res.write('         </p>');
+            		res.write('         <p>');
+            		res.write('         <p>');
+            		res.write(`         confirm password:<br></br><input name="confirmpassword" class="w3-input" type="password" style="width:20%">`)
+           	 	res.write('         <p>   ');
+            		res.write(`          <button class="w3-btn w3-section w3-teal w3-ripple"> Register </button></p>`);
+            		res.write('      </form>');
+            		res.write('</div> ');        
+			res.end('</body></html>	');
 	}
 });
+
+
 
 const findRestaurants = (db, max, criteria, callback) => {
 	//console.log(`findRestaurants(), criteria = ${JSON.stringify(criteria)}`);
