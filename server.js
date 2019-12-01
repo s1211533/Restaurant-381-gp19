@@ -134,28 +134,17 @@ const showdetails = (res,_id) => {
 }
 
 const insertDoc = (res,Doc) => {
-	const form = new formidable.IncomingForm();
-  	form.parse(req, (err, fields, Doc) => {
 	let docObj = {};
-		if (fields.name && fields.name.length > 0) {
-        		name = fields.name;
-			docObj['name'] = name;
-		}
-		if (fields.borough && fields.borough.length > 0) {
-        		borough = fields.borough;
-			docObj['borough'] = borough;
-		}
-		if (fields.cuisine && fields.cuisine.length > 0) {
-        		cuisine = fields.cuisine;
-			docObj['cuisine'] = cuisine;
-		}
+	docObj['name'] = name;
+	docObj['borough'] = borough;
+	docObj['cuisine'] = cuisine;
 	if (Object.keys(docObj).length > 0) 
 		const client = new MongoClient(mongoDBurl);
 		client.connect((err) => {
 			assert.equal(null,err);
 			console.log("Connected successfully to server");
 			const db = client.db(dbName);
-			db.collection('restaurant').insertOne(Doc,(err,result) => {
+			db.collection('restaurant').insertOne(docObj,(err,result) => {
 				assert.equal(err,null);
 				res.writeHead(200, {"Content-Type": "text/html"});
 				res.write('<html><body>');
@@ -166,7 +155,6 @@ const insertDoc = (res,Doc) => {
   	} else {
 		res.writeHead(404, {"Content-Type": "text/html"});
 		res.write('<html><body>');
-		res.write(`${doc} : Invalid document!\n`);
 		res.end('<br><a href=/read?max=20>Home</a>');	
 	}
 }
