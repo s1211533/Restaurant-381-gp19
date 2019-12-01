@@ -19,12 +19,10 @@ const server = http.createServer((req,res) => {
 		case '/':
 			console.log(req.session);
 			if (!req.session.authenticated) {
-				res.redirect('/login');
+				res.redirect('/login.html');
 			}
 			break;
-		case '/login':
-			res.status(200).sendFile(__dirname + '/login.html');	
-			break;	
+
 		default:
 			res.writeHead(404, {"Content-Type": "text/html"});
 			res.write('<html><body>');
