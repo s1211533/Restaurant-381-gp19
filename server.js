@@ -220,4 +220,3 @@ const updateDoc = (res,newDoc) => {
 	}
 }
 
-
