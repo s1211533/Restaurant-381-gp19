@@ -85,7 +85,8 @@ const server = http.createServer((req,res) => {
 						new_r['address'] = {"street" : "'+ street + '", "building" : "' + building + '", 
 								    "zipcode" : "' + zipcode + '", "latitude" : "' + latitude + '", 
 								    "longitude" : "' + longitude + '"};
-						new_r['grades'] = {"user" : "'+  + '", "score" : "' + score + '"};
+						new_r['grades'] = {"user" : "'+ '1' + '", "score" : "' + score + '"};
+						new_r['owner'] = 'o'
 						new_r['mimetype'] = mimetype;
          			 		new_r['image'] = new Buffer.from(data).toString('base64');
 						insertPhoto(db,new_r,(result) => {
