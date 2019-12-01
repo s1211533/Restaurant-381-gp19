@@ -60,7 +60,9 @@ const server = http.createServer((req,res) => {
     							callback(result);
   						});
 					}
-					    
+				});
+			});
+			});		    
 			break;
 		case '/delete':
 			deleteDoc(res,parsedURL.query.criteria);
