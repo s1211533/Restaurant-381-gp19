@@ -25,7 +25,7 @@ const server = http.createServer((req,res) => {
 			read_n_print(res,parseInt(max),parsedURL.query.criteria);
 			break;
 		case '/create':
-			insertDoc(res,parsedURL.query.criteria);
+			insertDoc(res,parsedURL.query);
 			break;
 		case '/delete':
 			deleteDoc(res,parsedURL.query.criteria);
