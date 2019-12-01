@@ -351,6 +351,14 @@ const updateDoc = (res,newDoc) => {
 		res.write(newDoc);
 		res.end('<br><a href=/read?max=20>Home</a>');	
 	}
+	const insertPhoto = (db,r,callback) => {
+  		db.collection('photo').insertOne(r,(err,result) => {
+   			assert.equal(err,null);
+    			console.log("insert was successful!");
+    			console.log(JSON.stringify(result));
+   		callback(result);
+  		});
+	}
 }
 server.listen(process.env.PORT || 8099);
 
