@@ -27,17 +27,17 @@ const server = http.createServer((req,res) => {
 			read_n_print(res,parseInt(max),parsedURL.query.criteria);
 			break;
 		case '/create':
-			const formidable = require('formidable');
-			const form = new formidable.IncomingForm();
+			var name, borough, description;
     			form.parse(req, (err, fields, files) => {
-			if (fields.name && fields.name.length > 0) {
-        			name = fields.name;
+			postData = fields;
+			if (postData.name && postData.name.length > 0) {
+        			name = postData.name;
      			}
-			if (fields.borough && fields.borough.length > 1) {
-        			borough = fields.borough;
+			if (postData.borough && postData.borough.length > 1) {
+        			borough = postData.borough;
 			}
-			if (fields.description && fields.description.length > 1) {
-        			description = fields.description;
+			if (postData.description && postData.description.length > 1) {
+        			description = postData.description;
 			}
 			fs.readFile(files.filetoupload.path, (err,data) => {
         			const client = new MongoClient(mongoDBurl);
