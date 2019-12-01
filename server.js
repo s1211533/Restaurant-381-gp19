@@ -133,7 +133,7 @@ const showdetails = (res,_id) => {
 	});
 }
 
-const insertDoc = (res,Doc,callback) => {
+const insertDoc = (res,Doc) => {
 	const form = new formidable.IncomingForm();
   	form.parse(req, (err, fields, Doc) => {
 	let docObj = {};
