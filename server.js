@@ -9,53 +9,34 @@ var session = require('cookie-session');
 var express = require('express');
 const app = express();
 
+
+app.use(session({
+	name: 'session'
+}));
+
+app.use(bodyParser.json());
+
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
 const server = http.createServer((req,res) => {
 	let timestamp = new Date().toISOString();
 	console.log(`Incoming request ${req.method}, ${req.url} received at ${timestamp}`);
-
 	let parsedURL = url.parse(req.url,true); // true to get query as object 
 	let max = (parsedURL.query.max) ? parsedURL.query.max : 20;   		 
-
 	switch(parsedURL.pathname) {
 		case '/':
 			app.get('/', (req,res) => {
 				console.log(req.session);
 				if (!req.session.authenticated) {
 					res.redirect('/login');
-				} else {
-					res.status(200).render('secrets',{name:req.session.username});
 				}
-
-});
-
-
-
-app.get('/login', (req,res) => {
-
-	res.status(200).sendFile(__dirname + '/login.html');
-
-});
-
-
-
-app.post('/login', (req,res) => {
-
-	users.forEach((user) => {
-
-		if (user.name == req.body.name && user.password == req.body.password) {
-
-			req.session.authenticated = true;
-
-			req.session.username = user.name;			
-
-		}
-
-	});
-
-	res.redirect('/');
-
-});
-			break;
+			});
+			app.get('/login', (req,res) => {
+				res.status(200).sendFile(__dirname + '/login.html');
+			
+			});	
+			break;	
 		
 		default:
 			res.writeHead(404, {"Content-Type": "text/html"});
@@ -66,4 +47,4 @@ app.post('/login', (req,res) => {
 	}
 });
 
-server.listen(process.env.PORT || 8099);
+
