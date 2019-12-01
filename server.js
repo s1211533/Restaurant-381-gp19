@@ -1,7 +1,6 @@
 const http = require('http');
 const url  = require('url');
 const fs = require('fs');
-const formidable = require('formidable');
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 const ObjectId = require('mongodb').ObjectID;
