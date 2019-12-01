@@ -88,7 +88,7 @@ const read_n_print = (res,max,criteria={}) => {
 				res.write(`<li><a href='/showdetails?_id=${r._id}'>${r.name}</a></li>`)
 			}
 			res.write('</ol>');
-			res.write(`<br><a href="/edit?_id=${_id}&name=${docs[0].name}&borough=${docs[0].borough}&cuisine=${docs[0].cuisine}">Insert</a>`)
+			res.write('<br><a href="/edit?_id=${_id}&name=${docs[0].name}&borough=${docs[0].borough}&cuisine=${docs[0].cuisine}">Insert</a>')
 			res.end('</body></html>');
 		});
 	});
@@ -141,14 +141,14 @@ const insertDoc = (res,doc) => {
 				res.writeHead(200, {"Content-Type": "text/html"});
 				res.write('<html><body>');
 				res.write(`Inserted ${result.insertedCount} document(s) \n`);
-				res.end('<br><a href=/read?max=5>Home</a>');					
+				res.end('<br><a href=/read?max=20>Home</a>');					
 			});
 		});
 	} else {
 		res.writeHead(404, {"Content-Type": "text/html"});
 		res.write('<html><body>');
 		res.write(`${doc} : Invalid document!\n`);
-		res.end('<br><a href=/read?max=5>Home</a>');	
+		res.end('<br><a href=/read?max=20>Home</a>');	
 	}
 }
 
@@ -171,7 +171,7 @@ const deleteDoc = (res,criteria) => {
 				res.writeHead(200, {"Content-Type": "text/html"});
 				res.write('<html><body>');
 				res.write(`Deleted ${result.deletedCount} document(s)\n`);
-				res.end('<br><a href=/read?max=5>Home</a>');					
+				res.end('<br><a href=/read?max=20>Home</a>');					
 			});
 		});
 	} else {
@@ -179,7 +179,7 @@ const deleteDoc = (res,criteria) => {
 		res.write('<html><body>');
 		res.write("Invalid criteria!\n");
 		res.write(criteria);
-		res.end('<br><a href=/read?max=5>Home</a>');	
+		res.end('<br><a href=/read?max=20>Home</a>');	
 	}
 }
 
@@ -200,7 +200,7 @@ const updateDoc = (res,newDoc) => {
 				res.writeHead(200, {"Content-Type": "text/html"});
 				res.write('<html><body>');
 				res.write(`Updated ${result.modifiedCount} document(s).\n`);
-				res.end('<br><a href=/read?max=5>Home</a>');				
+				res.end('<br><a href=/read?max=20>Home</a>');				
 			});
 		});
 	} else {
@@ -208,7 +208,7 @@ const updateDoc = (res,newDoc) => {
 		res.write('<html><body>');
 		res.write("Updated failed!\n");
 		res.write(newDoc);
-		res.end('<br><a href=/read?max=5>Home</a>');	
+		res.end('<br><a href=/read?max=20>Home</a>');	
 	}
 }
 
