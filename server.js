@@ -4,10 +4,23 @@ const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 const ObjectId = require('mongodb').ObjectID;
 const mongoDBurl = 'mongodb+srv://aaron:aaronso@aarondb-ep2mi.mongodb.net/test?retryWrites=true&w=majority';
-const dbName = 'AaronDB';
+const dbName = 's381assignment';
 var session = require('cookie-session');
 var express = require('express');
-
+var mongoose = require('mongoose');
+var UserSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    unique: true,
+    required: true,
+    trim: true
+  },
+  password: {
+    type: String,
+  }
+});
+var User = mongoose.model('User', UserSchema);
+module.exports = User;
 app = express();
 
 const server = http.createServer((req,res) => {
