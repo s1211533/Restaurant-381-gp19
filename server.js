@@ -1,7 +1,3 @@
-const express = require('express');
-const session = require('cookie-session');
-const bodyParser = require('body-parser');
-const app = express();
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 const ObjectId = require('mongodb').ObjectID;
@@ -15,17 +11,11 @@ client.connect((err) => {
    console.log("Connected successfully to server");
 
    const db = client.db(dbName);
-
-
-
    /*
 
    *  CRUD Operations
 
    */
 
-
-
    client.close();
-
 });
