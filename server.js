@@ -87,6 +87,7 @@ const read_n_print = (res,max,criteria={}) => {
 				//console.log(r._id);
 				res.write(`<li><a href='/showdetails?_id=${r._id}'>${r.name}</a></li>`)
 			}
+			res.write(`<br><a href="/edit?_id=${_id}&name=${docs[0].name}&borough=${docs[0].borough}&cuisine=${docs[0].cuisine}">Insert</a>`)
 			res.write('</ol>');
 			res.end('</body></html>');
 		});
@@ -210,5 +211,3 @@ const updateDoc = (res,newDoc) => {
 		res.end('<br><a href=/read?max=5>Home</a>');	
 	}
 }
-
-server.listen(process.env.PORT || 8099);
