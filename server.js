@@ -133,7 +133,12 @@ const showdetails = (res,_id) => {
 }
 
 const insertDoc = (res,doc) => {
-console.log(`updateDoc() - ${JSON.parse(Doc)}`);
+	try {
+		NewObj = JSON.parse(doc);
+	} catch (err) {
+
+		console.log(`${doc}`);
+	}
 	if (Object.keys(Doc).length > 0) {
 		const client = new MongoClient(mongoDBurl);
 		client.connect((err) => {
