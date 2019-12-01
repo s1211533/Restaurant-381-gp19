@@ -31,9 +31,9 @@ const server = http.createServer((req,res) => {
 			if (fields.name && fields.name.length > 0) {
         			name = fields.name;
      			}
-			 if (fields.borough && fields.borough.length > 1) {
+			if (fields.borough && fields.borough.length > 1) {
         			borough = fields.borough;
-			 }
+			}
 			if (fields.description && fields.description.length > 1) {
         			description = fields.description;
 			}
@@ -60,6 +60,8 @@ const server = http.createServer((req,res) => {
     							callback(result);
   						});
 					}
+				}
+			}	    
 			break;
 		case '/delete':
 			deleteDoc(res,parsedURL.query.criteria);
