@@ -160,36 +160,6 @@ const showdetails = (res,_id) => {
 		});
 	});
 }
-const insertDoc = (res,doc) => {
-	let docObj = {};
-	try {
-		docObj = JSON.parse(doc);
-		console.log(Object.keys(docObj).length);
-	} catch (err) {
-		console.log(`${docObj} : Invalid document!`);
-	}
-	if (Object.keys(docObj).length > 0) {  // document has at least 1 name/value pair
-		const client = new MongoClient(mongoDBurl);
-		client.connect((err) => {
-			assert.equal(null,err);
-			console.log("Connected successfully to server");
-			const db = client.db(dbName);
-			db.collection('restaurant').insertOne(docObj,(err,result) => {
-				assert.equal(err,null);
-				console.log(result);
-				res.writeHead(200, {"Content-Type": "text/html"});
-				res.write('<html><body>');
-				res.write(`Inserted ${result.insertedCount} document(s) \n`);
-				res.end('<br><a href=/read?max=20>Home</a>');					
-			});
-		});
-	} else {
-		res.writeHead(404, {"Content-Type": "text/html"});
-		res.write('<html><body>');
-		res.write(`${docObj} : Invalid document!\n`);
-		res.end('<br><a href=/read?max=5>Home</a>');	
-	}
-}
 const deleteDoc = (res,criteria) => {
 	let criteriaObj = {};
 	try {
