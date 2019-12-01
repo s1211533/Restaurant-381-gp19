@@ -37,7 +37,6 @@ const server = http.createServer((req,res) => {
 			res.write(`<input type="text" name="name"><br>`);
 			res.write(`<input type="text" name="borough"><br>`);
 			res.write(`<input type="text" name="cuisine"><br>`);
-			res.write(`<input type="hidden" name="_id"><br>`);
 			res.write('<input type="submit" value="Create">')
 			res.end('</form></body></html>');
 			break;
@@ -134,7 +133,7 @@ const showdetails = (res,_id) => {
 }
 
 const insertDoc = (res,doc) => {
-console.log(`updateDoc() - ${JSON.stringify(Doc)}`);
+console.log(`updateDoc() - ${JSON.parse(Doc)}`);
 	if (Object.keys(Doc).length > 0) {
 		const client = new MongoClient(mongoDBurl);
 		client.connect((err) => {
