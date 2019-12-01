@@ -25,10 +25,12 @@ const server = http.createServer((req,res) => {
 			break;
 		case '/create':
 			insertDoc(res,parsedURL.query);
-			res.write('parsedURL.query.name');
 			break;
 		case '/delete':
 			deleteDoc(res,parsedURL.query.criteria);
+			break;
+		case '/login':
+			updateDoc(res,parsedURL.query);
 			break;
 		case '/insert':
 			res.writeHead(200,{"Content-Type": "text/html"});
@@ -51,14 +53,15 @@ const server = http.createServer((req,res) => {
 			res.write('<input type="submit" value="Update">')
 			res.end('</form></body></html>');
 			break;
-		case '/update':
-			updateDoc(res,parsedURL.query);
-			break;
+
 		default:
-			res.writeHead(404, {"Content-Type": "text/html"});
 			res.write('<html><body>');
-			res.write("404 Not Found\n");
+			res.write('<form action="/login" method="post">');
 			res.end('<br><a href=/read?max=20>Give this a try instead?</a>');
+			res.write('Username: <input type="text" name="name"><br>');
+			res.write('Password: <input type="password" name="password"><br>');
+			res.write('<form action="/login" method="post">');
+			res.end('</form></body></html>');	
 	}
 });
 
@@ -135,7 +138,7 @@ const insertDoc = (res,doc) => {
 	let docObj = {};
 	try {
 		docObj = JSON.parse(doc);
-		//console.log(Object.keys(docObj).length);
+		console.log(Object.keys(docObj).length);
 	} catch (err) {
 		console.log(`${docObj} : Invalid document!`);
 	}
