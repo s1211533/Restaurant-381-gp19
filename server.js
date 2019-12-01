@@ -37,7 +37,6 @@ const server = http.createServer((req,res) => {
 				const filename = files.filetoupload.path;
 				let mimetype = "images/jpeg";
 				let title = "untitled";
-      				let mimetype = "images/jpeg";
       				if (fields.name && fields.name.length > 0) {
         				name = fields.name;
       				}
