@@ -31,23 +31,28 @@ const server = http.createServer((req,res) => {
 			const form = new formidable.IncomingForm();
     			form.parse(req, (err, fields, files) => {
 				if (files.filetoupload.size == 0) {
-       		 			res.writeHead(500,{"Content-Type":"text/plain"});
+       		 			console.log("1");
+					res.writeHead(500,{"Content-Type":"text/plain"});
        					res.end("No file uploaded!");  
       				}
 				const filename = files.filetoupload.path;
 				let mimetype = "images/jpeg";
 				let title = "untitled";
       				if (fields.name && fields.name.length > 0) {
-        				name = fields.name;
+        				console.log("1");
+					name = fields.name;
       				}
 				if (fields.borough && fields.borough.length > 0) {
-        				borough = fields.borough;
+        				console.log("2");
+					borough = fields.borough;
       				}      
 				if (fields.cuisine && fields.cuisine.length > 0) {
-        				cuisine = fields.cuisine;
+        				console.log("3");
+					cuisine = fields.cuisine;
       				}      				
 				if (fields.street && fields.street.length > 0) {
-        				street = fields.street;
+        				console.log("4");
+					street = fields.street;
       				}      				
 				if (fields.building && fields.building.length > 0) {
         				building = fields.building;
