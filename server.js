@@ -3,10 +3,6 @@ const session = require('cookie-session');
 const bodyParser = require('body-parser');
 const app = express();
 
-app.set('view engine','ejs');
-const SECRETKEY1 = 'I want to pass COMPS381F';
-const SECRETKEY2 = 'Keep this to yourself';
-
 const MongoClient = require('mongodb').MongoClient;
 
 const MongoClient = require('mongodb').MongoClient;
@@ -17,9 +13,6 @@ client.connect(err => {
   // perform actions on the collection object
   client.close();
 });
-
-
-app.set('view engine','ejs');
 
 
 app.use(session({
