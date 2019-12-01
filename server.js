@@ -353,7 +353,8 @@ const updateDoc = (res,newDoc) => {
 	}
 	const insertPhoto = (db,r,callback) => {
   		db.collection('photo').insertOne(r,(err,result) => {
-   			assert.equal(err,null);
+   			console.log("1");
+			assert.equal(err,null);
     			console.log("insert was successful!");
     			console.log(JSON.stringify(result));
    		callback(result);
