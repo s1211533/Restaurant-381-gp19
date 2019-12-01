@@ -1,5 +1,7 @@
 const http = require('http');
 const url  = require('url');
+const fs = require('fs');
+const formidable = require('formidable');
 const qs = require ('querystring');
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
@@ -26,38 +28,77 @@ const server = http.createServer((req,res) => {
 			read_n_print(res,parseInt(max),parsedURL.query.criteria);
 			break;
 		case '/create':
-			if (req.method == 'POST') {
-				let data = '';  // message body data
-				req.on('data', (payload) => {
-					data += payload;
-				});
-				req.on('end', () => {  
-					let postdata = qs.parse(data);
-					const client = new MongoClient(mongoDBurl);
-					client.connect((err) => {
-						assert.equal(null,err);
-						console.log("Connected successfully to server");
-						const db = client.db(dbName);
-						try{
-							temp = '{"name" :  "'+ postdata.name + '", "borough" : "' + postdata.borough + '", "cuisine" : "' + postdata.cuisine + '"}';
-							obj ={};
-							obj = JSON.parse(temp);
-						} catch (err) {
-							console.log('Invalida!');
-						}
-						db.collection('restaurants').insertOne(obj,(err,result) => {
-							res.writeHead(200, {'Content-Type': 'text/html'}); 
-         						res.write('<html>')        
-         						res.write('Successful!')
-        						res.end('</html>') 					
-						});
-					});					
-				})	
-				} else {
-					res.writeHead(404, {'Content-Type': 'text/plain'}); 
-					res.end('I can only handle POST request!!! Sorry.')
+			const form = new formidable.IncomingForm();
+    			form.parse(req, (err, fields, files) => {
+				if (files.filetoupload.size == 0) {
+       		 			res.writeHead(500,{"Content-Type":"text/plain"});
+       					res.end("No file uploaded!");  
+      				}
+				const filename = files.filetoupload.path;
+				let mimetype = "images/jpeg";
+				let title = "untitled";
+      				let mimetype = "images/jpeg";
+      				if (fields.name && fields.name.length > 0) {
+        				name = fields.name;
+      				}
+				if (fields.borough && fields.borough.length > 0) {
+        				borough = fields.borough;
+      				}      
+				if (fields.cuisine && fields.cuisine.length > 0) {
+        				cuisine = fields.cuisine;
+      				}      				
+				if (fields.street && fields.street.length > 0) {
+        				street = fields.street;
+      				}      				
+				if (fields.building && fields.building.length > 0) {
+        				building = fields.building;
+      				}      				
+				if (fields.zipcode && fields.zipcode.length > 0) {
+        				zipcode = fields.zipcode;
+      				}      				
+				if (fields.latitude && fields.title.latitude > 0) {
+        				latitude = fields.latitude;
+      				}
+				if (fields.longitude && fields.title.longitude > 0) {
+        				longitude = fields.longitude;
+      				}
+				if (fields.score && fields.title.score > 0) {
+        				score = fields.score;
+      				}
+				if (files.filetoupload.type) {
+					mimetype = files.filetoupload.type;
 				}
-			break;
+				fs.readFile(files.filetoupload.path, (err,data) => {
+        				let client = new MongoClient(mongourl);
+        				client.connect((err) => {
+         					try {
+              						assert.equal(err,null);
+           				 	} catch (err) {
+              						res.writeHead(500,{"Content-Type":"text/plain"});
+              						res.end("MongoClient connect() failed!");
+              						return(-1);
+          					}
+          					const db = client.db(dbName);
+          					let new_r = {};
+						new_r['name'] = name;
+						new_r['borough'] = borough;
+						new_r['cuisine'] = cuisine;
+						new_r['address'] = {"street" : "'+ street + '", "building" : "' + building + '", 
+								    "zipcode" : "' + zipcode + '", "latitude" : "' + latitude + '", 
+								    "longitude" : "' + longitude + '"};
+						new_r['grades'] = {"user" : "'+  + '", "score" : "' + score + '"};
+						new_r['mimetype'] = mimetype;
+         			 		new_r['image'] = new Buffer.from(data).toString('base64');
+						insertPhoto(db,new_r,(result) => {
+           						client.close();
+            						res.writeHead(200, {"Content-Type": "text/html"});
+            						res.write('<html><body>Photo was inserted into MongoDB!<br>');
+            						res.end('<a href="/photos">Back</a></body></html>')
+          					})
+        				});
+  				})
+    			});
+		break;
 		case '/login':
 				if (req.method == 'POST') {
 					let data = '';  // message body data
@@ -104,12 +145,18 @@ const server = http.createServer((req,res) => {
 			deleteDoc(res,parsedURL.query.criteria);
 			break;
 		case '/insert':
-			res.writeHead(200,{"Content-Type": "text/html"});
-			res.write('<html><body>');
-			res.write('<form action="/create" method="post">');
-			res.write(`<input type="text" name="name"><br>`);
-			res.write(`<input type="text" name="borough"><br>`);
-			res.write(`<input type="text" name="cuisine"><br>`);
+			res.writeHead(200, {'Content-Type': 'text/html'});
+    			res.write('<form action="/create" method="post" enctype="multipart/form-data">');
+    			res.write('Name: <input type="text" name="name"><br>');
+   			res.write('Borough: <input type="text" name="borough"><br>');
+			res.write('Cuisine: <input type="text" name="cuisine"><br>');
+			res.write('Street: <input type="text" name="street"><br>');
+			res.write('Building: <input type="text" name="building"><br>');
+			res.write('Zipcode: <input type="text" name="zipcode"><br>');
+			res.write('Latitude: <input type="text" name="latitude"><br>');
+			res.write('Longitude: <input type="text" name="longitude"><br>');
+			res.write('Score: <input type="text" name="Score"><br>');
+   			res.write('<input type="file" name="filetoupload"><br>');
 			res.write('<input type="submit" value="Create">')
 			res.end('</form></body></html>');
 			break;
@@ -291,3 +338,4 @@ const updateDoc = (res,newDoc) => {
 	}
 }
 server.listen(process.env.PORT || 8099);
+
