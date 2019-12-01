@@ -3,9 +3,8 @@ const url  = require('url');
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 const ObjectId = require('mongodb').ObjectID;
-const mongoDBurl = 'mongodb+srv://aaron:aaronso@aarondb-ep2mi.mongodb.net/test?retryWrites=true&w=majority';
-const dbName = 'test';
-
+const mongoDBurl = 'mongodb+srv://austinmok915:97253438@restaurant-381-as8sr.gcp.mongodb.net/test?retryWrites=true&w=majority';
+const dbName = '381assignment';
 
 const server = http.createServer((req,res) => {
 	let timestamp = new Date().toISOString();
