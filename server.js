@@ -1,7 +1,6 @@
 const http = require('http');
 const url  = require('url');
 const MongoClient = require('mongodb').MongoClient;
-const formidable = require('formidable');
 const assert = require('assert');
 const ObjectId = require('mongodb').ObjectID;
 const mongoDBurl = 'mongodb+srv://aaron:aaronso@aarondb-ep2mi.mongodb.net/test?retryWrites=true&w=majority';
@@ -34,7 +33,7 @@ const server = http.createServer((req,res) => {
 		case '/insert':
 			res.writeHead(200,{"Content-Type": "text/html"});
 			res.write('<html><body>');
-			res.write('<form action="/create" method="post">');
+			res.write('<form action="/create">');
 			res.write(`<input type="text" name="name"><br>`);
 			res.write(`<input type="text" name="borough"><br>`);
 			res.write(`<input type="text" name="cuisine"><br>`);
