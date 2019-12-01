@@ -3,14 +3,17 @@
 	"description": "restaurant-381",
 	"version": "0.0.1",
 	"dependencies": {
-		"mongodb": "3.1",
-		"express": "latest",
+		"express": "*",
+		"ejs": "*",
+		"cors": "*",
+		"node-fetch": "*"
 		"cookie-session": "latest"
 	},
 	"scripts": {
-		"start": "node server"
+		"start": "node server.js"
 	},
 	"engines": {
-		"node": ">= 6.0.0"
+		"node": ">=8.0.0",
+		"npm": ">=6.0.0"
 	}
 }
