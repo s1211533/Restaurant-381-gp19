@@ -257,4 +257,4 @@ const updateDoc = (res,newDoc) => {
 		res.end('<br><a href=/read?max=20>Home</a>');	
 	}
 }
-
+server.listen(process.env.PORT || 8099);
