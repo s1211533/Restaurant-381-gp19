@@ -132,13 +132,15 @@ const showdetails = (res,_id) => {
 		});
 	});
 }
-
-const insertDoc = (res,Doc) => {
+const insertDoc = (res,doc) => {
 	let docObj = {};
-	docObj['name'] = name;
-	docObj['borough'] = borough;
-	docObj['cuisine'] = cuisine;
-	if (Object.keys(docObj).length > 0) 
+	try {
+		docObj = JSON.parse(doc);
+		//console.log(Object.keys(docObj).length);
+	} catch (err) {
+		console.log(`${doc} : Invalid document!`);
+	}
+	if (Object.keys(docObj).length > 0) {  // document has at least 1 name/value pair
 		const client = new MongoClient(mongoDBurl);
 		client.connect((err) => {
 			assert.equal(null,err);
@@ -152,13 +154,13 @@ const insertDoc = (res,Doc) => {
 				res.end('<br><a href=/read?max=5>Home</a>');					
 			});
 		});
-  	} else {
+	} else {
 		res.writeHead(404, {"Content-Type": "text/html"});
 		res.write('<html><body>');
-		res.end('<br><a href=/read?max=20>Home</a>');	
+		res.write(`${doc} : Invalid document!\n`);
+		res.end('<br><a href=/read?max=5>Home</a>');	
 	}
 }
-
 const deleteDoc = (res,criteria) => {
 	let criteriaObj = {};
 	try {
