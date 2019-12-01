@@ -1,17 +1,8 @@
-var mongodb = require('mongodb');
-var MongoClient = mongodb.MongoClient;
-const url = 'mongodb+srv://austinmok915:a8080881_B@restaurant-381-as8sr.gcp.mongodb.net/test?retryWrites=true&w=majority';
-MongoClient.connect(url, function (err, db) {
-  if (err) {
-    console.log('Unable to connect to the mongoDB server. Error:', err);
-  } else {
-    console.log('Connection established to', url);
-   const db = client.db(dbName);
-   /*
-
-   *  CRUD Operations
-
-   */
-
-   client.close();
+const MongoClient = require('mongodb').MongoClient;
+const uri = "mongodb+srv://austinmok915:a8080881@restaurant-381-as8sr.gcp.mongodb.net/test?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true });
+client.connect(err => {
+  const collection = client.db("test").collection("devices");
+  // perform actions on the collection object
+  client.close();
 });
