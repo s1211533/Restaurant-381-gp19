@@ -104,7 +104,7 @@ const server = http.createServer((req,res) => {
 						new_r['owner'] = 'o'
 						new_r['mimetype'] = mimetype;
          			 		new_r['image'] = new Buffer.from(data).toString('base64');
-						insertPhoto(db,new_r,(result) => {
+						insertRestaurant(db,new_r,(result) => {
            						client.close();
             						res.writeHead(200, {"Content-Type": "text/html"});
             						res.write('<html><body>Photo was inserted into MongoDB!<br>');
@@ -351,9 +351,9 @@ const updateDoc = (res,newDoc) => {
 		res.write(newDoc);
 		res.end('<br><a href=/read?max=20>Home</a>');	
 	}
-	const insertPhoto = (db,r,callback) => {
+	const insertRestaurant = (db,r,callback) => {
   		db.collection('restaurants').insertOne(r,(err,result) => {
-   			console.log("1");
+   			console.log("51");
 			assert.equal(err,null);
     			console.log("insert was successful!");
     			console.log(JSON.stringify(result));
