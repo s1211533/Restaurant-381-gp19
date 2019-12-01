@@ -1,12 +1,13 @@
 const http = require('http');
 const url  = require('url');
+const fs = require('fs');
+const formidable = require('formidable');
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 const ObjectId = require('mongodb').ObjectID;
 const mongoDBurl = 'mongodb+srv://aaron:aaronso@aarondb-ep2mi.mongodb.net/test?retryWrites=true&w=majority';
 const dbName = 'test';
-const formidable = require('formidable');
-const fs = require('fs');
+
 
 const server = http.createServer((req,res) => {
 	let timestamp = new Date().toISOString();
@@ -26,6 +27,7 @@ const server = http.createServer((req,res) => {
 			read_n_print(res,parseInt(max),parsedURL.query.criteria);
 			break;
 		case '/create':
+			const formidable = require('formidable');
 			const form = new formidable.IncomingForm();
     			form.parse(req, (err, fields, files) => {
 			if (fields.name && fields.name.length > 0) {
