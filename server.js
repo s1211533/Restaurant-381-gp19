@@ -32,7 +32,7 @@ const server = http.createServer((req,res) => {
 
 app.get('/login', (req,res) => {
 
-	res.status(200).sendFile(__dirname + '/public/login.html');
+	res.status(200).sendFile(__dirname + '/login.html');
 
 });
 
