@@ -352,7 +352,7 @@ const updateDoc = (res,newDoc) => {
 		res.end('<br><a href=/read?max=20>Home</a>');	
 	}
 	const insertPhoto = (db,r,callback) => {
-  		db.collection('photo').insertOne(r,(err,result) => {
+  		db.collection('restaurants').insertOne(r,(err,result) => {
    			console.log("1");
 			assert.equal(err,null);
     			console.log("insert was successful!");
