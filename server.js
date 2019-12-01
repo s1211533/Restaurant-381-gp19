@@ -6,8 +6,6 @@ const assert = require('assert');
 const ObjectId = require('mongodb').ObjectID;
 const mongoDBurl = 'mongodb+srv://aaron:aaronso@aarondb-ep2mi.mongodb.net/test?retryWrites=true&w=majority';
 const dbName = 's381assignment';
-var session = require('cookie-session');
-var express = require('express');
 
 
 const server = http.createServer((req,res) => {
@@ -63,9 +61,6 @@ const server = http.createServer((req,res) => {
 		case '/delete':
 			deleteDoc(res,parsedURL.query.criteria);
 			break;
-		case '/login':
-			updateDoc(res,parsedURL.query);
-			break;
 		case '/insert':
 			res.writeHead(200,{"Content-Type": "text/html"});
 			res.write('<html><body>');
@@ -92,9 +87,6 @@ const server = http.createServer((req,res) => {
 			res.write('<html><body>');
 			res.write('<form action="/login" method="post">');
 			res.end('<br><a href=/read?max=20>Give this a try instead?</a>');
-			res.write('Username: <input type="text" name="name"><br>');
-			res.write('Password: <input type="password" name="password"><br>');
-			res.write('<form action="/login" method="post">');
 			res.end('</form></body></html>');	
 	}
 });
@@ -258,4 +250,4 @@ const updateDoc = (res,newDoc) => {
 	}
 }
 
-server.listen(process.env.PORT || 8099);
+
