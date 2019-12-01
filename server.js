@@ -157,7 +157,6 @@ const insertDoc = (res,doc) => {
 	} else {
 		res.writeHead(404, {"Content-Type": "text/html"});
 		res.write('<html><body>');
-		res.write('doc.name');
 		res.write(`${docObj} : Invalid document!\n`);
 		res.end('<br><a href=/read?max=5>Home</a>');	
 	}
