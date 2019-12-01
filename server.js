@@ -39,6 +39,7 @@ const server = http.createServer((req,res) => {
 			res.write(`<input type="text" name="cuisine"><br>`);
 			res.write('<input type="submit" value="Create">')
 			res.end('</form></body></html>');
+			Doc
 			break;
 		case '/edit':
 			res.writeHead(200,{"Content-Type": "text/html"});
@@ -98,7 +99,7 @@ const read_n_print = (res,max,criteria={}) => {
 				res.write(`<li><a href='/showdetails?_id=${r._id}'>${r.name}</a></li>`)
 			}
 			res.write('</ol>');
-			res.write('<br><a href="/insert?_id=${_id}">Insert</a>')
+			res.write('<br><a href="/insert?${_id}=_id&${name}=name&${borough}=borough&${cuisine}=cuisin">Insert</a>')
 			res.end('</body></html>');
 		});
 	});
@@ -150,14 +151,14 @@ const insertDoc = (res,doc) => {
 				res.writeHead(200, {"Content-Type": "text/html"});
 				res.write('<html><body>');
 				res.write(`Inserted ${result.insertedCount} document(s) \n`);
-				res.end('<br><a href=/read?max=5>Home</a>');					
+				res.end('<br><a href=/read?max=20>Home</a>');					
 			});
 		});
 	} else {
 		res.writeHead(404, {"Content-Type": "text/html"});
 		res.write('<html><body>');
 		res.write(`${doc} : Invalid document!\n`);
-		res.end('<br><a href=/read?max=5>Home</a>');	
+		res.end('<br><a href=/read?max=20>Home</a>');	
 	}
 }
 const deleteDoc = (res,criteria) => {
