@@ -55,25 +55,32 @@ const server = http.createServer((req,res) => {
 					street = fields.street;
       				}      				
 				if (fields.building && fields.building.length > 0) {
-        				building = fields.building;
+        				console.log("4");
+					building = fields.building;
       				}      				
 				if (fields.zipcode && fields.zipcode.length > 0) {
-        				zipcode = fields.zipcode;
+        				console.log("4");
+					zipcode = fields.zipcode;
       				}      				
 				if (fields.latitude && fields.latitude.length > 0) {
-        				latitude = fields.latitude;
+        				console.log("4");
+					latitude = fields.latitude;
       				}
 				if (fields.longitude && fields.longitude.length > 0) {
-        				longitude = fields.longitude;
+        				console.log("5");
+					longitude = fields.longitude;
       				}
 				if (fields.score && fields.score.length > 0) {
-        				score = fields.score;
+        				console.log("6");
+					score = fields.score;
       				}
 				if (files.filetoupload.type) {
+					console.log("7");
 					mimetype = files.filetoupload.type;
 				}
 				fs.readFile(files.filetoupload.path, (err,data) => {
-        				let client = new MongoClient(mongoDBurl);
+        				console.log("8");
+					let client = new MongoClient(mongoDBurl);
         				client.connect((err) => {
          					try {
               						assert.equal(err,null);
@@ -85,11 +92,14 @@ const server = http.createServer((req,res) => {
           					const db = client.db(dbName);
           					let new_r = {};
 						new_r['name'] = name;
+						console.log("9");
 						new_r['borough'] = borough;
+						console.log("0");
 						new_r['cuisine'] = cuisine;
 						new_r['address'] = {"street" : "'+ street + '", "building" : "' + building + '", 
 								    "zipcode" : "' + zipcode + '", "latitude" : "' + latitude + '", 
 								    "longitude" : "' + longitude '"};
+						console.log("1");
 						new_r['grades'] = {"user" : "'+ score + '", "score" : "' + score '"};
 						new_r['owner'] = 'o'
 						new_r['mimetype'] = mimetype;
