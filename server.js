@@ -101,10 +101,15 @@ const server = http.createServer((req,res) => {
 								    "longitude" : "' + longitude '"};
 						console.log("1");
 						new_r['grades'] = {"user" : "'+ score + '", "score" : "' + score '"};
-						new_r['owner'] = 'o'
+						console.log("14");
+						new_r['owner'] = borough
+						console.log("21");
 						new_r['mimetype'] = mimetype;
-         			 		new_r['image'] = new Buffer.from(data).toString('base64');
+         			 		console.log("31");
+						new_r['image'] = new Buffer.from(data).toString('base64');
+						console.log("31");
 						insertRestaurant(db,new_r,(result) => {
+							console.log("111");
            						client.close();
             						res.writeHead(200, {"Content-Type": "text/html"});
             						res.write('<html><body>Photo was inserted into MongoDB!<br>');
