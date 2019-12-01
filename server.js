@@ -134,25 +134,19 @@ const showdetails = (res,_id) => {
 }
 
 const insertDoc = (res,doc) => {
-	let docObj = {};
-	try {
-		docObj = JSON.parse(doc);
-		//console.log(Object.keys(docObj).length);
-	} catch (err) {
-		console.log(`${doc} : Invalid document!`);
-	}
-	if (Object.keys(docObj).length > 0) {  // document has at least 1 name/value pair
+console.log(`updateDoc() - ${JSON.stringify(Doc)}`);
+	if (Object.keys(Doc).length > 0) {
 		const client = new MongoClient(mongoDBurl);
 		client.connect((err) => {
 			assert.equal(null,err);
 			console.log("Connected successfully to server");
 			const db = client.db(dbName);
-			db.collection('restaurant').insertOne(docObj,(err,result) => {
+			db.collection('restaurant').insertOne(Doc,(err,result) => {
 				assert.equal(err,null);
 				res.writeHead(200, {"Content-Type": "text/html"});
 				res.write('<html><body>');
-				res.write(`Inserted ${result.insertedCount} document(s) \n`);
-				res.end('<br><a href=/read?max=20>Home</a>');					
+				res.write(`Updated ${result.insertedCount} document(s).\n`);
+				res.end('<br><a href=/read?max=20>Home</a>');				
 			});
 		});
 	} else {
