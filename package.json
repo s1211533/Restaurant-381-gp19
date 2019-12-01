@@ -8,7 +8,7 @@
 		"cookie-session": "latest"
 	},
 	"scripts": {
-		"start": "node server"
+		"start": "node server.js"
 	},
 	"engines": {
 		"node": ">= 6.0.0"
