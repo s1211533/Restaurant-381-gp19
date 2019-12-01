@@ -5,6 +5,7 @@ const assert = require('assert');
 const ObjectId = require('mongodb').ObjectID;
 const mongoDBurl = 'mongodb+srv://aaron:aaronso@aarondb-ep2mi.mongodb.net/test?retryWrites=true&w=majority';
 const dbName = 'test';
+const formidable = require('formidable');
 
 const server = http.createServer((req,res) => {
 	let timestamp = new Date().toISOString();
@@ -35,7 +36,7 @@ const server = http.createServer((req,res) => {
 		case '/insert':
 			res.writeHead(200,{"Content-Type": "text/html"});
 			res.write('<html><body>');
-			res.write('<form action="/create">');
+			res.write('<form action="/create" method="post">');
 			res.write(`<input type="text" name="name"><br>`);
 			res.write(`<input type="text" name="borough"><br>`);
 			res.write(`<input type="text" name="cuisine"><br>`);
@@ -135,6 +136,7 @@ const showdetails = (res,_id) => {
 	});
 }
 const insertDoc = (res,doc) => {
+	doc = {name:req.query.name, borough:req.query.borough, cuisine:req.query.cuisine}
 	let docObj = {};
 	try {
 		docObj = JSON.parse(doc);
