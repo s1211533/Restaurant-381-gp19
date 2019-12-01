@@ -99,7 +99,7 @@ const read_n_print = (res,max,criteria={}) => {
 				res.write(`<li><a href='/showdetails?_id=${r._id}'>${r.name}</a></li>`)
 			}
 			res.write('</ol>');
-			res.write('<br><a href="/insert?${_id}=_id&${name}=name&${borough}=borough&${cuisine}=cuisin">Insert</a>')
+			res.write('<br><a href="/insert?${name}=name&${borough}=borough&${cuisine}=cuisin">Insert</a>')
 			res.end('</body></html>');
 		});
 	});
