@@ -155,7 +155,7 @@ const insertDoc = (res,Doc,callback) => {
 			assert.equal(null,err);
 			console.log("Connected successfully to server");
 			const db = client.db(dbName);
-			db.collection('restaurant').insertOne(docObj,(err,result) => {
+			db.collection('restaurant').insertOne(Doc,(err,result) => {
 				assert.equal(err,null);
 				res.writeHead(200, {"Content-Type": "text/html"});
 				res.write('<html><body>');
