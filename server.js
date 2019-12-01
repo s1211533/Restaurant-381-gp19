@@ -99,7 +99,7 @@ const read_n_print = (res,max,criteria={}) => {
 				res.write(`<li><a href='/showdetails?_id=${r._id}'>${r.name}</a></li>`)
 			}
 			res.write('</ol>');
-			res.write('<br><a href="/insert">Insert</a>')
+			res.write('<br><a href="/insert">?_id=${_id}&name=${docs[0].name}&borough=${docs[0].borough}&cuisine=${docs[0].cuisine}Insert</a>')
 			res.end('</body></html>');
 		});
 	});
@@ -151,7 +151,7 @@ const insertDoc = (res,doc) => {
 				res.writeHead(200, {"Content-Type": "text/html"});
 				res.write('<html><body>');
 				res.write(`Inserted ${result.insertedCount} document(s) \n`);
-				res.end('<br><a href=/read?max=5>Home</a>');					
+				res.end('<br><a href=/read?max=20>Home</a>');					
 			});
 		});
 	} else {
