@@ -92,7 +92,8 @@ app.get('/list',(req, res) => {
 			const findRestaurant = (db, callback) => { 
 				let cursor2 = db.collection('restaurants').find() 
 				cursor2.forEach((rname) => { 
-					res.status(200).render('restaurantList',{resname:rname});
+					console.log(ranme.name);
+					res.status(200).render('restaurantList',{resname:rname.name});
 				});
 				callback();
 			}
