@@ -54,7 +54,7 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 					if (account.name == req.body.name && account.password == req.body.password) {
 						req.session.authenticated = true;
 						req.session.username = account.name;
-						res.redirect('/home');
+						res.status(200).render('register_success');
 					}
 					else{
 						res.status(200).render('fail');
