@@ -93,7 +93,7 @@ const findRestaurants = (db, max, criteria, callback) => {
 		//console.log(docs);
 		callback(docs);
 	});
-}
+}});
 
 app.get('/home', (req,res) => {
 	const client = new MongoClient(mongoDBurl);
@@ -117,7 +117,7 @@ app.get('/home', (req,res) => {
 			res.end('</body></html>');
 		});
 	});
-}
+});
 
 app.get('/logout', (req,res) => {
 	req.session = null;
