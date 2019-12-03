@@ -97,7 +97,7 @@ app.get('/list',(req, res) => {
 					for(var i = 0; i < restaurants.length ;i++){
 						rname[i] = listing.name;
 					}
-					res.status(200).render('restaurantList',{name:req.session.username},{resname:rname});
+					res.status(200).render('restaurantList',{name:req.session.username});
 				}); 
 				callback(); 
 			}
