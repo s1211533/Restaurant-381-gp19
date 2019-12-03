@@ -12,13 +12,15 @@ const express = require('express');
 const app = express();
 var timestamp = null;
 
+const SECRETKEY1 = 'I want to pass COMPS381F';
+const SECRETKEY2 = 'Keep this to yourself';
+
 app.set('view engine', 'ejs');
 
-
 app.use(session({
-  name: 'session',
+  	name: 'session',
+	keys: [SECRETKEY1,SECRETKEY2]
 }));
-
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
