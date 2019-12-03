@@ -5,9 +5,6 @@ const ObjectId = require('mongodb').ObjectID;
 const mongoDBurl = 'mongodb+srv://aaron:aaronso@aarondb-ep2mi.mongodb.net/test?retryWrites=true&w=majority';
 const dbName = 's381assignment';
 const session = require('cookie-session');
-const qs = require ('querystring');
-const formidable = require('formidable');
-const fs = require('fs');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -71,12 +68,11 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 
 			try{
 				doc.forEach((user) => {
-					if (user.name == req.body.logid && user.password == req.body.password) {
+					if (user.name == req.body.name && user.password == req.body.password) {
 						req.session.authenticated = true;
 						req.session.username = user.name;			
 					}
 				});
-				res.status(200).render('test')
 			} catch (err) {
 				console.log('Invalid!');
 			}
