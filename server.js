@@ -51,15 +51,14 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 			const findUser = (db, callback) => { 
 				let cursor = db.collection('user').find() 
 				cursor.forEach((account) => { 
-						if (account.name == req.body.name && account.password == req.body.password) {
-							req.session.authenticated = true;
-							req.session.username = account.name;
-							res.status(200).render('register_success');
-						}
-						else{
-							console.log('Invalid!');
-						}
-					});
+					if (account.name == req.body.name && account.password == req.body.password) {
+						req.session.authenticated = true;
+						req.session.username = account.name;
+						res.status(200).render('register_success');
+					}
+					else{
+						console.log('Invalid!');
+					}
 				}); 
 				callback(); 
 			}
