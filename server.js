@@ -1,17 +1,15 @@
-const express = require('express');
-const app = express();
-
 const url  = require('url');
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 const ObjectId = require('mongodb').ObjectID;
-const mongoDBurl = 'mongodb+srv://g1211533:g1211533@cluster0-rjree.mongodb.net/test?retryWrites=true&w=majority';
-const dbName = 'project';
+const mongoDBurl = 'mongodb+srv://aaron:aaronso@aarondb-ep2mi.mongodb.net/test?retryWrites=true&w=majority';
+const dbName = 's381assignment';
 const session = require('cookie-session');
 const qs = require ('querystring');
 const formidable = require('formidable');
 const fs = require('fs');
-
+const express = require('express');
+const app = express();
 var timestamp = null;
 
 app.set('view engine', 'ejs');
@@ -23,7 +21,7 @@ const setCurrentTimestamp = (req, res, next) => {
 }
 
 app.get('/', setCurrentTimestamp, (req, res) => {
-	res.render('index', {});
+	res.render('login', {});
 });
 
 app.post('/register', setCurrentTimestamp, (req, res) => {
@@ -61,14 +59,11 @@ app.post('/register', setCurrentTimestamp, (req, res) => {
 });
 
 app.post('/login', setCurrentTimestamp, (req, res) => {
-
 	const data = req.body;
 	const postdata = qs.parse(data);
-
 	const client = new MongoClient(mongoDBurl);
 	client.connect(
 		(err) => {
-
 			assert.equal(null, err);
 			console.log("Connected successfully to server");
 			const db = client.db(dbName);
@@ -79,7 +74,6 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 			} catch (err) {
 				console.log('Invalid!');
 			}
-
 			db.collection('user').find(obj,(err,result) => {
 				read_n_print(res,parseInt(max));
 		   	});
