@@ -78,7 +78,7 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 						req.session.username = user.name;			
 					}
 				});
-				res.redirect('/');
+				res.status(200).render('test')
 			} catch (err) {
 				console.log('Invalid!');
 			}
