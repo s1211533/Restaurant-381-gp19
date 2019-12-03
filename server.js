@@ -99,7 +99,7 @@ app.get('/list',(req, res) => {
 				assert.equal(null,err); 
 				console.log("Connected successfully to server");
 				const db = client.db(dbName);
-				findUser(db,() => { 
+				findRestaurant(db,() => { 
 					client.close();
 				});
 			});
