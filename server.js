@@ -93,7 +93,7 @@ app.get('/list',(req, res) => {
 				let cursor2 = db.collection('restaurants').find() 
 				console.log('${cursor2}');
 				res.status(200).render('restaurantList',{uname:req.session.username,
-						       resname:{cursor2});
+						       resname:{cursor2}});
 				callback();
 			}
 			client.connect((err) => { 
