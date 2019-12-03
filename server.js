@@ -77,6 +77,11 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 });
 
 
+app.get('/home', (req,res) => {
+	res.status(200).render('home');
+});
+
+
 app.post('/home', setCurrentTimestamp, (req, res) => {
 	const client = new MongoClient(mongoDBurl);
 	client.connect(
