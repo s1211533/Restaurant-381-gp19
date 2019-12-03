@@ -83,30 +83,12 @@ app.get('/home', (req,res) => {
 
 
 app.post('/home', setCurrentTimestamp, (req, res) => {
-	const client = new MongoClient(mongoDBurl);
-	client.connect(
-		(err) => {
-			assert.equal(null, err);
-			console.log("Connected successfully to server");
-			const db = client.db(dbName);
-			const findRestaurant = (db, callback) => { 
-				let cursor = db.collection('restaurant').find() 
-				cursor.forEach((restaurant) => { 
-					res.status(200).render('home',{name:req.session.username});			  
-				}); 
-				callback(); 
-			}
-			client.connect((err) => { 
-				assert.equal(null,err); 
-				console.log("Connected successfully to server");
-				const db = client.db(dbName);
-				findRestaurant(db,() => { 
-					client.close();
-				});
-			});
+	res.status(200).render('home',{name:req.session.username});
+});	
 
-		}
-	);
+app.get('/logout', (req,res) => {
+	req.session = null;
+	res.redirect('/');
 });
 
 app.listen(process.env.PORT || 8099);
