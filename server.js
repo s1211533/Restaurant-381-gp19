@@ -49,33 +49,30 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 			assert.equal(null, err);
 			console.log("Connected successfully to server");
 			const db = client.db(dbName);
-				const findUser = (db, callback) => { 
-					let cursor = db.collection('user').find() 
-					cursor.forEach((doc) => { 
-						userRecord = JSON.stringify(doc);
-					}); 
-					callback(); 
-				};
-				client.connect((err) => { 
-					assert.equal(null,err); 
-					console.log("Connected successfully to server");
-					const db = client.db(dbName);
-					findUser(db,() => { 
-						client.close();
-					}) 
-				})
-
-			try{
-				doc.forEach((account) => {
-					if (account.name == req.body.name && account.password == req.body.password) {
-						req.session.authenticated = true;
-						req.session.username = account.name;
-						res.status(200).render('register_success');
-					}
-				});
-			} catch (err) {
-				console.log('Invalid!');
+			const findUser = (db, callback) => { 
+				let cursor = db.collection('user').find() 
+				cursor.forEach((doc) => { 
+					userRecord = JSON.stringify(doc);
+				}); 
+				callback(); 
 			}
+			client.connect((err) => { 
+				assert.equal(null,err); 
+				console.log("Connected successfully to server");
+				const db = client.db(dbName);
+				findUser(db,() => { 
+					client.close();
+				});
+			doc.forEach((account) => {
+				if (account.name == req.body.name && account.password == req.body.password) {
+					req.session.authenticated = true;
+					req.session.username = account.name;
+					res.status(200).render('register_success');
+				}
+				else{
+					console.log('Invalid!');
+				}
+			});
 		}
 	);
 });
