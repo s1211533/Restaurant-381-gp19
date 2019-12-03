@@ -101,11 +101,8 @@ app.get('/home', (req,res) => {
 					client.close();
 				});
 			});
-
 		}
 	);
-});
-	res.status(200).render('restaurantList');
 });
 
 app.get('/logout', (req,res) => {
