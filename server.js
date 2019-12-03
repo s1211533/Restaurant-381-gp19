@@ -82,7 +82,7 @@ app.get('/home', (req,res) => {
 });
 
 
-app.post('/home', (req, res) => {
+app.post('/home', setCurrentTimestamp, (req, res) => {
 	const client = new MongoClient(mongoDBurl);
 	client.connect(
 		(err) => {
@@ -92,9 +92,7 @@ app.post('/home', (req, res) => {
 			const findRestaurant = (db, callback) => { 
 				let cursor = db.collection('restaurant').find() 
 				cursor.forEach((restaurant) => { 
-					for (r of restaurants) {
-						res.status(200).render('home',{name:req.session.username}, 
-								       {restaurant:restaurant.name[r]});
+						res.status(200).render('home',{name:req.session.username});			  
 					}
 				}); 
 				callback(); 
