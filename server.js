@@ -76,7 +76,6 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 					client.close();
 				});
 			});
-
 		}
 	);
 });
@@ -90,14 +89,11 @@ app.get('/list',(req, res) => {
 			assert.equal(null, err);
 			console.log("Connected successfully to server");
 			const db = client.db(dbName);
-			const findUser = (db, callback) => { 
+			const findRestaurant = (db, callback) => { 
 				let cursor = db.collection('restaurants').find() 
-				cursor.forEach((listing) => {
-					let testing = listing.name
-					res.status(200).render('restaurantList',{name:req.session.username},
-							       {resname:testing});
-				}); 
-				callback(); 
+				res.status(200).render('restaurantList',{name:req.session.username},
+						       {resname:cursor});
+				callback();
 			}
 			client.connect((err) => { 
 				assert.equal(null,err); 
