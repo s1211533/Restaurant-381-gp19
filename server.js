@@ -56,7 +56,7 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 					if (account.name == req.body.name && account.password == req.body.password) {
 						req.session.authenticated = true;
 						req.session.username = account.name;
-						res.status(200).render('register_success');
+						res.redirect('/list');
 					}
 					else{
 						res.status(200).render('fail');
@@ -79,23 +79,8 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 });
 
 
-const findRestaurants = (db, max, criteria, callback) => {
-	//console.log(`findRestaurants(), criteria = ${JSON.stringify(criteria)}`);
-	let criteriaObj = {};
-	try {
-		criteriaObj = JSON.parse(criteria);
-	} catch (err) {
-		console.log('Invalid criteria!  Default to {}');
-	}
-	cursor = db.collection('restaurants').find(criteriaObj).sort({name: -1}).limit(max); 
-	cursor.toArray((err,docs) => {
-		assert.equal(err,null);
-		//console.log(docs);
-		callback(docs);
-	});
-}
 
-app.get('/home',(res) => {
+app.get('/list',(res) => {
 	res.writeHead(200, {"Content-Type": "text/html"});
 	res.write('<html><head><title>Restaurant</title></head>');
 	res.write('<body><H1>Restaurants</H1>');
