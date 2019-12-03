@@ -10,6 +10,7 @@ const formidable = require('formidable');
 const fs = require('fs');
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 var timestamp = null;
 
 const SECRETKEY1 = 'I want to pass COMPS381F';
