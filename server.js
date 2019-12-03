@@ -78,7 +78,7 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 
 
 app.get('/home', (req,res) => {
-	res.status(200).render('register_success');
+	res.status(200).render('restaurantList');
 });
 
 app.get('/logout', (req,res) => {
