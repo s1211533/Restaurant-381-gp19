@@ -15,6 +15,8 @@ const SECRETKEY2 = 'Keep this to yourself';
 
 app.set('view engine', 'ejs');
 
+let sessionUser = null;
+
 app.use(session({
   	name: 'session',
 	keys: [SECRETKEY1,SECRETKEY2]
@@ -77,12 +79,45 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 });
 
 
-app.get('/home', (req,res) => {
-	console.log(req.session);
-	if (req.session.authenticated) {
-		res.status(200).render('restaurantList',{name:req.session.username});
+const findRestaurants = (db, max, criteria, callback) => {
+	//console.log(`findRestaurants(), criteria = ${JSON.stringify(criteria)}`);
+	let criteriaObj = {};
+	try {
+		criteriaObj = JSON.parse(criteria);
+	} catch (err) {
+		console.log('Invalid criteria!  Default to {}');
 	}
-});
+	cursor = db.collection('restaurants').find(criteriaObj).sort({name: -1}).limit(max); 
+	cursor.toArray((err,docs) => {
+		assert.equal(err,null);
+		//console.log(docs);
+		callback(docs);
+	});
+}
+
+app.get('/home', (req,res) => {
+	const client = new MongoClient(mongoDBurl);
+	client.connect((err) => {
+		assert.equal(null,err);
+		console.log("Connected successfully to server");
+		const db = client.db(dbName);
+		findRestaurants(db, max, criteria, (restaurants) => {
+			client.close();
+			console.log('Disconnected MongoDB');
+			res.writeHead(200, {"Content-Type": "text/html"});
+			res.write('<html><head><title>Restaurant</title></head>');
+			res.write('<body><H1>Restaurants</H1>');
+			res.write('<H2>Showing '+restaurants.length+' document(s)</H2>');
+			res.write('<ol>');
+			for (r of restaurants) {
+				//console.log(r._id);
+				res.write(`<li><a href='/showdetails?_id=${r._id}'>${r.name}</a></li>`)
+			}
+			res.write('</ol>');
+			res.end('</body></html>');
+		});
+	});
+}
 
 app.get('/logout', (req,res) => {
 	req.session = null;
