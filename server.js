@@ -151,7 +151,7 @@ app.post('/register', (req,res) => {
 });
 
 app.get('/register', (req,res) => {
-	res.status(200).render('login');
+	res.status(200).render('register');
 });
 
 
