@@ -150,6 +150,12 @@ app.post('/register', (req,res) => {
 	}
 });
 
+app.get('/register', (req,res) => {
+	res.status(200).render('login');
+});
+
+
+console.log(typeof a);
 
 
 
