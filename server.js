@@ -57,6 +57,7 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 						res.status(200).render('register_success');
 					}
 					else{
+						res.status(200).render('fail');
 						console.log('Invalid!');
 					}
 				}); 
