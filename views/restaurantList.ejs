@@ -2,9 +2,9 @@
    <body>
        <H1>Hello, <%= uname %></H1>
        <ul>
-         <% resname.forEach(function(eachRestaurant){ %>
+         <% resname.forEach((eachRestaurant) =>{ %>
          <li> <%= eachRestaurant.name %> </li>
-         <% }) %>
+         <% }); %>
        </ul>    
    </body>
 </html>
