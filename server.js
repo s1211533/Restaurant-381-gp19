@@ -128,50 +128,37 @@ app.get('/logout', (req,res) => {
 
 app.post('/register', (req,res) => {
 	
-	if (req.method == 'POST') {
-		let data = '';  // message body data
-		console.log("k");
-		// process data in message body
-		req.on('data', (payload) => {
-		   data += payload;
-		});
+	const client = new MongoClient(mongoDBurl);
+	client.connect(
+		(err) => {
+			assert.equal(null, err);
+			console.log("Connected successfully to server");
+			const db = client.db(dbName);
+			const regUser = (db, callback) => {
+				if (req.body.repassword == req.body.password){
+					obj = {};
+					obj['name']=req.body.name;
+					obj['password']=req.body.password;
+					db.collection('user').insertOne(obj,(err,result) => { 
+						res.redirect('/login');					
+					});
+					}else {
+						res.status(200).render('fail reg');
+						console.log('Invalid!');}
 
-		req.on('end', () => {  
-			let postdata = qs.parse(data);
-			console.log("u");
-			if (postdata.regpassword==postdata.confirmpassword){
-			console.log("u");
-			const client = new MongoClient(mongoDBurl);
-			client.connect((err) => {
-				assert.equal(null,err);
+				callback(); 
+			}
+			client.connect((err) => { 
+				assert.equal(null,err); 
 				console.log("Connected successfully to server");
 				const db = client.db(dbName);
-				try{
-			temp = '{ "name" :  "'+ postdata.regid + '", "password" : "' + postdata.regpassword + '"}';
-				obj ={};
-				obj = JSON.parse(temp);
-				} catch (err) {
-					console.log('Invalid!');}
-
-				db.collection('user').insertOne(obj,(err,result) => {
-					res.writeHead(200, {'Content-Type': 'text/html'}); 
-						 res.write('<html>')   
-					 res.write('<br><a href="/">Register Success</a>')
-					res.end('</html>') 				
-					});
+				regUser(db,() => { 
+					client.close();
+				});
 			});
 
-			} else {
-					res.writeHead(200, {'Content-Type': 'text/html'}); 
-					res.write('<html>')   
-					 res.write('<br><a href="/">Confirm password does not match!</a>')
-					res.end('</html>') 
-					}  
-			 })
-	} else {
-		res.writeHead(404, {'Content-Type': 'text/plain'}); 
-		res.end('Error.')
-	}
+		}
+	);
 });
 
 app.get('/register', (req,res) => {
