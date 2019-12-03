@@ -70,7 +70,8 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 				doc.forEach((user) => {
 					if (user.name == req.body.name && user.password == req.body.password) {
 						req.session.authenticated = true;
-						req.session.username = user.name;			
+						req.session.username = user.name;
+						res.status(200).render('register_success');
 					}
 				});
 			} catch (err) {
