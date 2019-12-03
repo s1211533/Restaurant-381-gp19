@@ -92,8 +92,7 @@ app.post('/home', setCurrentTimestamp, (req, res) => {
 			const findRestaurant = (db, callback) => { 
 				let cursor = db.collection('restaurant').find() 
 				cursor.forEach((restaurant) => { 
-						res.status(200).render('home',{name:req.session.username});			  
-					}
+					res.status(200).render('home',{name:req.session.username});			  
 				}); 
 				callback(); 
 			}
