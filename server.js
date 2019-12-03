@@ -95,7 +95,7 @@ const findRestaurants = (db, max, criteria, callback) => {
 	});
 }
 
-app.get('/home', (req,res) => {
+app.get('/home',(res) => {
 	res.writeHead(200, {"Content-Type": "text/html"});
 	res.write('<html><head><title>Restaurant</title></head>');
 	res.write('<body><H1>Restaurants</H1>');
