@@ -36,6 +36,9 @@ app.get('/', setCurrentTimestamp, (req, res) => {
 	if (!req.session.authenticated) {
 		res.redirect('/login');
 	}
+	else {
+		res.redirect('/list');
+	}
 });
 
 
@@ -81,10 +84,17 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 
 
 app.get('/list',(req, res) => {
-	const username = req.session.username;
 	res.status(200).render('restaurantList');
-	
 });
+
+
+app.post('/list',(req, res) => {
+	res.writeHead(200, {'Content-Type': 'text/html'}); 
+	res.write('<html>')   
+	res.write('<br><a href="/">Register Success</a>')
+	res.end('</html>') 	
+});
+
 
 app.get('/logout', (req,res) => {
 	req.session = null;
@@ -121,9 +131,9 @@ app.post('/register', (req,res) => {
 
 				db.collection('user').insertOne(obj,(err,result) => {
 					res.writeHead(200, {'Content-Type': 'text/html'}); 
-					 res.write('<html>')   
+						 res.write('<html>')   
 					 res.write('<br><a href="/">Register Success</a>')
-					res.end('</html>') 					
+					res.end('</html>') 				
 					});
 			});
 
