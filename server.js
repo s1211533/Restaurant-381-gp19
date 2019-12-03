@@ -83,7 +83,7 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 app.get('/list',(req, res) => {
 	req.session = null;
 	res.writeHead(200, {"Content-Type": "text/html"});
-	res.write('<html><head><title>'+req.session.name+'</title></head>');
+	res.write('<html><head><title>'+req.session.username+'</title></head>');
 	res.write('<body><H1>Restaurants</H1>');
 	res.end('</body></html>');
 });
