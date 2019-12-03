@@ -45,13 +45,13 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 	const client = new MongoClient(mongoDBurl);
 	client.connect(
 		(err) => {
-			let userRecord = [];
 			assert.equal(null, err);
 			console.log("Connected successfully to server");
 			const db = client.db(dbName);
 			const findUser = (db, callback) => { 
 				let cursor = db.collection('user').find() 
 				cursor.forEach((doc) => { 
+					let userRecord = new Array();
 					userRecord = JSON.stringify(doc);
 					userRecord.forEach((account) => {
 						if (account.name == req.body.name && account.password == req.body.password) {
