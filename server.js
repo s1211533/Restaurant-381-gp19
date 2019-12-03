@@ -49,7 +49,7 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 	const client = new MongoClient(mongoDBurl);
 	client.connect(
 		(err) => {
-			const userRecord = [];
+			let userRecord = [];
 			assert.equal(null, err);
 			console.log("Connected successfully to server");
 			const db = client.db(dbName);
