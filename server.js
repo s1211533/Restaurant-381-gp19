@@ -92,4 +92,58 @@ app.get('/logout', (req,res) => {
 	res.redirect('/');
 });
 
+
+app.post('/register', (req,res) => {
+	
+	if (req.method == 'POST') {
+		let data = '';  // message body data
+		console.log("k");
+		// process data in message body
+		req.on('data', (payload) => {
+		   data += payload;
+		});
+
+		req.on('end', () => {  
+			let postdata = qs.parse(data);
+			console.log("u");
+			if (postdata.regpassword==postdata.confirmpassword){
+			console.log("u");
+			const client = new MongoClient(mongoDBurl);
+			client.connect((err) => {
+				assert.equal(null,err);
+				console.log("Connected successfully to server");
+				const db = client.db(dbName);
+				try{
+			temp = '{ "name" :  "'+ postdata.regid + '", "password" : "' + postdata.regpassword + '"}';
+				obj ={};
+				obj = JSON.parse(temp);
+				} catch (err) {
+					console.log('Invalid!');}
+
+				db.collection('user').insertOne(obj,(err,result) => {
+					res.writeHead(200, {'Content-Type': 'text/html'}); 
+					 res.write('<html>')   
+					 res.write('<br><a href="/">Register Success</a>')
+					res.end('</html>') 					
+					});
+			});
+
+			} else {
+					res.writeHead(200, {'Content-Type': 'text/html'}); 
+					res.write('<html>')   
+					 res.write('<br><a href="/">Confirm password does not match!</a>')
+					res.end('</html>') 
+					}  
+			 })
+	} else {
+		res.writeHead(404, {'Content-Type': 'text/plain'}); 
+		res.end('Error.')
+	}
+});
+
+
+
+
+
+
 app.listen(process.env.PORT || 8099);
