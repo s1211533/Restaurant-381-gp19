@@ -82,7 +82,7 @@ app.get('/home', (req,res) => {
 });
 
 
-app.post('/home', setCurrentTimestamp, (req, res) => {
+app.post('/home', (req, res) => {
 	const client = new MongoClient(mongoDBurl);
 	client.connect(
 		(err) => {
