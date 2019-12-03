@@ -46,11 +46,9 @@ app.get('/login', (req,res) => {
 
 app.post('/login', setCurrentTimestamp, (req, res) => {
 	const data = req.body;
-	const postdata = qs.parse(data);
 	const client = new MongoClient(mongoDBurl);
 	client.connect(
 		(err) => {
-			const client = new MongoClient(mongoDBurl); 
 			const userRecord = [];
 			assert.equal(null, err);
 			console.log("Connected successfully to server");
