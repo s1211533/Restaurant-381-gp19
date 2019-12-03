@@ -91,7 +91,7 @@ app.get('/list',(req, res) => {
 			const db = client.db(dbName);
 			const findRestaurant = (db, callback) => { 
 				let cursor = db.collection('restaurants').find() 
-				res.status(200).render('restaurantList',{name:req.session.username},
+				res.status(200).render('restaurantList',{uname:req.session.username},
 						       {resname:cursor});
 				callback();
 			}
