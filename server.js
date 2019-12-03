@@ -14,6 +14,15 @@ var timestamp = null;
 
 app.set('view engine', 'ejs');
 
+
+app.use(session({
+  name: 'session',
+}));
+
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 const setCurrentTimestamp = (req, res, next) => {
 	timestamp = new Date().toISOString();
 	console.log(`Incoming request ${req.method}, ${req.url} received at ${timestamp}`);
@@ -21,41 +30,15 @@ const setCurrentTimestamp = (req, res, next) => {
 }
 
 app.get('/', setCurrentTimestamp, (req, res) => {
-	res.render('login', {});
+	console.log(req.session);
+	if (!req.session.authenticated) {
+		res.redirect('/login');
+	}
 });
 
-app.post('/register', setCurrentTimestamp, (req, res) => {
 
-	const data = req.body;
-	const postdata = qs.parse(data);
-
-	if (postdata.regpassword == postdata.confirmpassword) {
-
-		const client = new MongoClient(mongoDBurl);
-		client.connect(
-			(err) => {
-
-				assert.equal(null, err);
-				console.log("Connected successfully to server");
-				const db = client.db(dbName);
-				try{
-					let temp = '{ "name" :  "'+ postdata.regid + '", "password" : "' + postdata.regpassword + '"}';
-					let obj ={};
-					obj = JSON.parse(temp);
-				} catch (err) {
-					console.log('Invalid!');
-				}
-
-				db.collection('user').insertOne(obj,(err,result) => {
-					res.send('<a href="/">Register Successfully!</a>');
-				});
-
-			}
-		);
-
-	} else {
-		res.send('<a href="/">Confirm password should be match with the password!</a>');
-	}
+app.get('/login', (req,res) => {
+	res.status(200).render('login');
 });
 
 app.post('/login', setCurrentTimestamp, (req, res) => {
@@ -64,51 +47,41 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 	const client = new MongoClient(mongoDBurl);
 	client.connect(
 		(err) => {
+			const userRecord = [];
 			assert.equal(null, err);
 			console.log("Connected successfully to server");
 			const db = client.db(dbName);
+				const findUser = (db, callback) => { 
+					let cursor = db.collection('user').find() 
+					cursor.forEach((doc) => { 
+						userRecord = JSON.stringify(doc));
+					}); 
+					callback(); 
+				};
+				const client = new MongoClient(mongoDBurl); 
+				client.connect((err) => { 
+					assert.equal(null,err); 
+					console.log("Connected successfully to server");
+					const db = client.db(dbName);
+					findUser(db,() => { 
+						client.close();
+					}) 
+				})
+
 			try{
-				let temp = '{ "name" :  "'+ postdata.logid + '", "password" : "' + postdata.password + '"}';
-				let obj ={};
-				obj = JSON.parse(temp);
+				doc.forEach((user) => {
+					if (user.name == req.body.logid && user.password == req.body.password) {
+						req.session.authenticated = true;
+						req.session.username = user.name;			
+					}
+				});
+				res.redirect('/');
 			} catch (err) {
 				console.log('Invalid!');
 			}
-			db.collection('user').find(obj,(err,result) => {
-				read_n_print(res,parseInt(max));
-		   	});
-
 		}
 	);
-
 });
-
-const read_n_print = (res,max,criteria={}) => {
-	const client = new MongoClient(mongoDBurl);
-	client.connect((err) => {
-		assert.equal(null,err);
-		console.log("Connected successfully to server!");
-
-		const db = client.db(dbName);
-		findRestaurants(db, max, criteria, (restaurants) => {
-			client.close();
-			console.log('Disconnected MongoDB');
-			res.writeHead(200, {"Content-Type": "text/html"});
-			res.write('<html><head><title>Restaurant</title></head>');
-			res.write('<body><H1>Restaurants</H1>');
-			res.write('<H2>Showing '+restaurants.length+' document(s)</H2>');
-			res.write('<ol>');
-			for (r of restaurants) {
-				//console.log(r._id);
-				res.write(`<li><a href='/showdetails?_id=${r._id}'>${r.name}</a></li>`)
-			}
-			res.write('</ol>');
-			res.write('<br><a href="/insert">Create New Restaurant</a>')
-			res.end('</body></html>');
-		});
-	});
-}
-
 
 var server = app.listen(8081, () => console.log('Listening on port 8081'));
 
