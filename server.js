@@ -63,6 +63,7 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 				findUser(db,() => { 
 					client.close();
 				});
+			});
 			doc.forEach((account) => {
 				if (account.name == req.body.name && account.password == req.body.password) {
 					req.session.authenticated = true;
@@ -76,3 +77,5 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 		}
 	);
 });
+
+app.listen(process.env.PORT || 8099);
