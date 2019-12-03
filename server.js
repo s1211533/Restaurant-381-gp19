@@ -51,7 +51,7 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 			const findUser = (db, callback) => { 
 				let cursor = db.collection('user').find() 
 				cursor.forEach((doc) => { 
-					let userRecord = new Array();
+					let userRecord = new Array({});
 					userRecord = JSON.stringify(doc);
 					userRecord.forEach((account) => {
 						if (account.name == req.body.name && account.password == req.body.password) {
