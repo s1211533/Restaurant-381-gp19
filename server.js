@@ -53,6 +53,16 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 				let cursor = db.collection('user').find() 
 				cursor.forEach((doc) => { 
 					userRecord = JSON.stringify(doc);
+					userRecord.forEach((account) => {
+						if (account.name == req.body.name && account.password == req.body.password) {
+							req.session.authenticated = true;
+							req.session.username = account.name;
+							res.status(200).render('register_success');
+						}
+						else{
+							console.log('Invalid!');
+						}
+					});
 				}); 
 				callback(); 
 			}
@@ -64,16 +74,9 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 					client.close();
 				});
 			});
-			userRecord.forEach((account) => {
-				if (account.name == req.body.name && account.password == req.body.password) {
-					req.session.authenticated = true;
-					req.session.username = account.name;
-					res.status(200).render('register_success');
-				}
-				else{
-					console.log('Invalid!');
-				}
-			});
+
 		}
 	);
 });
+
+app.listen(process.env.PORT || 8099);
