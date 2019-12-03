@@ -77,5 +77,4 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 	);
 });
 
-app.listen(process.env.PORT || 8099);
-
+app.listen(process.env.PORT || 8099)
