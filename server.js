@@ -64,7 +64,7 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 					client.close();
 				});
 			});
-			doc.forEach((account) => {
+			userRecord.forEach((account) => {
 				if (account.name == req.body.name && account.password == req.body.password) {
 					req.session.authenticated = true;
 					req.session.username = account.name;
