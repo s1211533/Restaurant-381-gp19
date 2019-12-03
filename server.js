@@ -78,13 +78,8 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 
 
 app.get('/home', (req,res) => {
-	res.status(200).render('home');
-});
-
-
-app.post('/home', setCurrentTimestamp, (req, res) => {
 	res.status(200).render('home',{name:req.session.username});
-});	
+});
 
 app.get('/logout', (req,res) => {
 	req.session = null;
