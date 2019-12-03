@@ -50,6 +50,7 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 	const client = new MongoClient(mongoDBurl);
 	client.connect(
 		(err) => {
+			const client = new MongoClient(mongoDBurl); 
 			const userRecord = [];
 			assert.equal(null, err);
 			console.log("Connected successfully to server");
@@ -61,7 +62,6 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 					}); 
 					callback(); 
 				};
-				const client = new MongoClient(mongoDBurl); 
 				client.connect((err) => { 
 					assert.equal(null,err); 
 					console.log("Connected successfully to server");
