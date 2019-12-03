@@ -54,7 +54,7 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 				const findUser = (db, callback) => { 
 					let cursor = db.collection('user').find() 
 					cursor.forEach((doc) => { 
-						userRecord = JSON.stringify(doc));
+						userRecord = JSON.stringify(doc);
 					}); 
 					callback(); 
 				};
