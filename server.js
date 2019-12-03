@@ -42,7 +42,6 @@ app.get('/login', (req,res) => {
 });
 
 app.post('/login', setCurrentTimestamp, (req, res) => {
-	const data = req.body;
 	const client = new MongoClient(mongoDBurl);
 	client.connect(
 		(err) => {
