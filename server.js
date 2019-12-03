@@ -90,9 +90,9 @@ app.get('/list',(req, res) => {
 			console.log("Connected successfully to server");
 			const db = client.db(dbName);
 			const findRestaurant = (db, callback) => { 
-				let cursor = db.collection('restaurants').find() 
+				let cursor2 = db.collection('restaurants').find() 
 				res.status(200).render('restaurantList',{uname:req.session.username},
-						       {resname:cursor});
+						       {resname:cursor2});
 				callback();
 			}
 			client.connect((err) => { 
