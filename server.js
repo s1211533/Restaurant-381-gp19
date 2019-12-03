@@ -163,6 +163,36 @@ app.get('/register', (req,res) => {
 	res.status(200).render('register');
 });
 
+app.post('/delete', (req, res) => {
+	const client = new MongoClient(mongoDBurl);
+	client.connect(
+		(err) => {
+			assert.equal(null, err);
+			console.log("Connected successfully to server");
+			const db = client.db(dbName);
+			const deleteRestaurants = (db, callback) => {
+                        db.collection('restaurant').deleteOne(
+                        {_id: ObjectId(_id)}, 
+                        (err, results) => {
+                        if (err) throw err;
+                        console.log(results);
+                        callback();
+      }
+   );
+};
+			client.connect((err) => { 
+				assert.equal(null,err); 
+				console.log("Connected successfully to server");
+				const db = client.db(dbName);
+				deleteRestaurants(db,() => { 
+					client.close();
+				});
+			});
+		}
+	);
+});
+
+
 
 console.log(typeof a);
 
