@@ -93,8 +93,9 @@ app.get('/list',(req, res) => {
 			const findUser = (db, callback) => { 
 				let cursor = db.collection('restaurants').find() 
 				cursor.forEach((listing) => {
+					let testing = listing.name
 					res.status(200).render('restaurantList',{name:req.session.username},
-							       {resname:listing.name});
+							       {resname:testing});
 				}); 
 				callback(); 
 			}
