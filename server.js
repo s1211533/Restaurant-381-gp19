@@ -78,31 +78,10 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 
 
 app.get('/home', (req,res) => {
-	const client = new MongoClient(mongoDBurl);
-	client.connect(
-		(err) => {
-			assert.equal(null, err);
-			console.log("Connected successfully to server");
-			const db = client.db(dbName);
-			const findRestaurant = (db, callback) => { 
-				let list = [];
-				let cursor = db.collection('restaurants').find() 
-				cursor.forEach((record) => { 
-					console.log(JSON.stringify(record));
-					res.status(200).render('restaurantList',{name:req.session.username});
-				}); 
-				callback(); 
-			}
-			client.connect((err) => { 
-				assert.equal(null,err); 
-				console.log("Connected successfully to server");
-				const db = client.db(dbName);
-				findRestaurant(db,() => { 
-					client.close();
-				});
-			});
-		}
-	);
+	console.log(req.session);
+	if (req.session.authenticated) {
+		res.status(200).render('restaurantList',{name:req.session.username});
+	}
 });
 
 app.get('/logout', (req,res) => {
