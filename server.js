@@ -84,7 +84,7 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 
 
 app.get('/list',(req, res) => {
-	res.status(200).render('restaurantList');
+	res.status(200).render('restaurantList',{name:req.session.username});
 });
 
 
