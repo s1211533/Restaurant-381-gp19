@@ -6,8 +6,8 @@ const mongoDBurl = 'mongodb+srv://aaron:aaronso@aarondb-ep2mi.mongodb.net/test?r
 const dbName = 's381assignment';
 const session = require('cookie-session');
 const express = require('express');
-const app = express();
 const bodyParser = require('body-parser');
+const app = express();
 var timestamp = null;
 
 const SECRETKEY1 = 'I want to pass COMPS381F';
@@ -67,10 +67,10 @@ app.post('/login', setCurrentTimestamp, (req, res) => {
 				})
 
 			try{
-				doc.forEach((user) => {
-					if (user.name == req.body.name && user.password == req.body.password) {
+				doc.forEach((account) => {
+					if (account.name == req.body.name && account.password == req.body.password) {
 						req.session.authenticated = true;
-						req.session.username = user.name;
+						req.session.username = account.name;
 						res.status(200).render('register_success');
 					}
 				});
