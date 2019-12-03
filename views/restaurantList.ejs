@@ -1,6 +1,10 @@
 <html>
    <body>
        <H1>Hello, <%= name %></H1>
-       <H1>Hello, <%= resname %></H1>
+       <H1>
+            <% resnanme.forEach(function(eachRestaurant){ %>
+                  <%= eachRestaurant.name %>
+            <% }) %>
+       </H1>
    </body>
 </html>
