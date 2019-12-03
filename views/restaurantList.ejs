@@ -2,7 +2,7 @@
    <body>
        <H1>Hello, <%= name %></H1>
        <H1>
-            <% resname.forEach(function(eachRestaurant){ %>
+            <%= resname.forEach(function(eachRestaurant){ %>
                   <%= eachRestaurant.name %>
             <% }) %>
        </H1>
